@@ -912,7 +912,7 @@
       "currency": "INR",
       "name": "Jambhulsangh",
       "description": "Farmer Registration Fee",
-      "image": "logo.jpeg",
+      "image": "logo2.png",
       "handler": function (response) {
         // This code runs ONLY if payment is successful
         formData.timestamp = new Date().toISOString();
