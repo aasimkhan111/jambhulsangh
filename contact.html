@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us - Jambhulsangh Growers Network</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/styles/main.css?v=18" />
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 0;
+        transition: background 0.3s ease, color 0.3s ease;
+      }
+      .content-wrapper {
+        max-width: 800px;
+        margin: 8rem auto 4rem;
+        padding: 0 1.5rem;
+      }
+      .contact-header {
+        text-align: center;
+        margin-bottom: 3.5rem;
+      }
+      .contact-header h1 {
+        font-family: 'Poppins', sans-serif;
+        font-size: clamp(2.2rem, 5vw, 3.5rem);
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0 0 1rem;
+        line-height: 1.15;
+      }
+      .contact-header p {
+        font-size: clamp(1rem, 2.5vw, 1.25rem);
+        color: var(--text-soft);
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+      .glass-form {
+        background: var(--surface);
+        border: 2px solid #000000;
+        border-radius: var(--radius-xl);
+        padding: 2.5rem;
+        box-shadow: var(--shadow-soft);
+      }
+      .form-group {
+        margin-bottom: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .form-group label {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--text);
+      }
+      .form-control {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0.85rem 1rem;
+        border-radius: var(--radius-md);
+        border: 2px solid #000000 !important;
+        background: var(--input-bg, rgba(255, 255, 255, 0.8));
+        color: var(--text);
+        font-family: inherit;
+        font-size: 1rem;
+        transition: border-color 0.2s, box-shadow 0.2s;
+      }
+      [data-theme="dark"] .form-control {
+        background: rgba(0, 0, 0, 0.3) !important;
+      }
+      .form-control:focus {
+        outline: none;
+        border-color: var(--primary) !important;
+        box-shadow: 0 0 0 4px rgba(16, 139, 100, 0.15);
+      }
+      .submit-btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        background: linear-gradient(135deg, #0e5b35, #149c5e) !important;
+        color: white !important;
+        font-weight: 700;
+        border: 2px solid #000000 !important;
+        padding: 1rem;
+        border-radius: var(--radius-xl);
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: transform 0.28s ease, box-shadow 0.28s ease;
+      }
+      .submit-btn:hover {
+        transform: translateY(-3px) scale(1.015);
+        box-shadow: 0 10px 20px rgba(16, 139, 100, 0.35);
+      }
+      .success-message {
+        display: none;
+        text-align: center;
+        background: rgba(16, 185, 129, 0.1);
+        border: 2px solid #10b981;
+        border-radius: var(--radius-lg);
+        color: #10b981;
+        padding: 1.5rem;
+        font-weight: 600;
+        margin-top: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="floating-nav glass" aria-label="Main navigation">
+      <a class="brand-lockup" href="index.html">
+        <img class="brand-mark brand-logo" src="logo2.png" alt="Jambhulsangh logo" />
+        <span class="brand-copy">
+          <strong>Jambhulsangh</strong>
+          <small>Jambhul growers network</small>
+        </span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="index.html" class="button button-secondary compact-button" style="border: 2px solid #000000 !important; font-family: 'Poppins', sans-serif; font-weight: 600; text-decoration: none;">
+          🏠 Home / मुख्यपृष्ठ
+        </a>
+        <button id="themeToggleBtn" class="button button-secondary compact-button" type="button" style="border: 2px solid #000000 !important;">
+          Dark mode
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Content Shell -->
+    <main class="content-wrapper">
+      <div class="contact-header">
+        <h1>संपर्क साधा / Contact Us</h1>
+        <p>
+          Have questions, custom inquiries, or need bulk orders? Fill out the form below and the Jambhulsangh administrative team will reach out directly.
+        </p>
+      </div>
+
+      <div class="glass-form">
+        <form id="contactForm">
+          <div class="form-group">
+            <label for="fullName">पूर्ण नाव / Full Name</label>
+            <input type="text" id="fullName" class="form-control" placeholder="Enter your full name" required />
+          </div>
+
+          <div class="form-group">
+            <label for="phoneNum">मोबाईल क्रमांक / Mobile Number</label>
+            <input type="tel" id="phoneNum" class="form-control" placeholder="Enter your 10-digit mobile number" pattern="[0-9]{10}" required />
+          </div>
+
+          <div class="form-group">
+            <label for="emailAddr">ईमेल पत्ता / Email Address (Optional)</label>
+            <input type="email" id="emailAddr" class="form-control" placeholder="name@example.com" />
+          </div>
+
+          <div class="form-group">
+            <label for="messageText">तुमचा संदेश / Message</label>
+            <textarea id="messageText" class="form-control" rows="5" placeholder="Write your message here..." required></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn">
+            ✉️ संदेश पाठवा / Send Message
+          </button>
+        </form>
+
+        <div id="successMsg" class="success-message">
+          ✓ संदेश यशस्वीरित्या पाठवला गेला! आम्ही तुमच्याशी लवकरच संपर्क करू. / Message sent successfully! We will get in touch with you shortly.
+        </div>
+      </div>
+    </main>
+
+    <!-- Form and Theme Logic -->
+    <script>
+      const contactForm = document.getElementById("contactForm");
+      const successMsg = document.getElementById("successMsg");
+
+      contactForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        // Hide form fields and show beautiful success prompt
+        contactForm.style.display = "none";
+        successMsg.style.display = "block";
+      });
+
+      const themeToggleBtn = document.getElementById("themeToggleBtn");
+      
+      // Load current theme
+      const savedTheme = localStorage.getItem("theme") || "light";
+      document.documentElement.setAttribute("data-theme", savedTheme);
+      updateButtonText(savedTheme);
+
+      themeToggleBtn.addEventListener("click", () => {
+        const currentTheme = document.documentElement.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateButtonText(newTheme);
+      });
+
+      function updateButtonText(theme) {
+        themeToggleBtn.textContent = theme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
+      }
+    </script>
+  </body>
+</html>

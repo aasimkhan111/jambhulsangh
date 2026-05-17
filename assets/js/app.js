@@ -25,16 +25,17 @@
 
   var semanticAliases = {
     id: ["id", "uid", "slug", "code"],
-    title: ["title", "name", "listing", "item", "project", "farm"],
-    category: ["category", "segment", "type", "group"],
+    title: ["title", "name", "listing", "item", "project", "farm", "पूर्ण नाव", "पूर्ण_नाव"],
+    category: ["category", "segment", "type", "group", "जांभूळ जात / वाण", "जांभूळ_जात_वाण"],
     status: ["status", "state"],
     price: ["price", "amount", "value", "cost", "rate"],
-    date: ["date", "created", "created_at", "createdat", "updated", "published"],
-    summary: ["summary", "description", "details", "notes", "about"],
+    date: ["date", "created", "created_at", "createdat", "updated", "published", "नोंदणी तारीख", "नोंदणी_तारीख", "timestamp"],
+    summary: ["summary", "description", "details", "notes", "about", "पत्ता"],
     image: ["image", "imageurl", "image_url", "thumbnail", "logo", "photo"],
     owner: ["owner", "manager", "agent", "lead", "contact"],
-    location: ["location", "city", "market", "region"],
-    stage: ["stage", "priority", "label", "tier"],
+    location: ["location", "city", "market", "region", "गावाचे नाव", "गावाचे_नाव"],
+    phone: ["phone", "mobile", "tel", "contact_no", "मोबाईल क्रमांक (१)", "मोबाईल_क्रमांक_१"],
+    stage: ["stage", "priority", "label", "tier", "जांभूळ विक्री / जांभूळ थिकण", "जांभूळ_विक्री_जांभूळ_थिकण"],
   };
 
   var state = {
@@ -158,7 +159,27 @@
       "Vegetables": "Vegetables",
       "Active": "Active",
       "Pending": "Pending",
-      "Completed": "Completed"
+      "Completed": "Completed",
+      // Supabase column name translations
+      "timestamp": "Date",
+      "name": "Name",
+      "village": "Village",
+      "address": "Address",
+      "phone1": "Phone 1",
+      "phone2": "Phone 2",
+      "taluka": "Taluka",
+      "district": "District",
+      "state": "State",
+      "pincode": "Pincode",
+      "area": "Area",
+      "treecount": "Tree Count",
+      "distance": "Tree Spacing",
+      "plantyear": "Planting Year",
+      "yield": "Yield",
+      "saletype": "Sale Type",
+      "variety": "Variety",
+      "created_at": "Registration Date",
+      "id": "ID"
     },
     mr: {
       brandName: "जांभूळसंघ",
@@ -232,7 +253,27 @@
       "Vegetables": "भाज्या",
       "Active": "सक्रिय",
       "Pending": "प्रलंबित",
-      "Completed": "पूर्ण झाले"
+      "Completed": "पूर्ण झाले",
+      // Supabase column name translations
+      "timestamp": "तारीख",
+      "name": "पूर्ण नाव",
+      "village": "गाव",
+      "address": "पत्ता",
+      "phone1": "मोबाईल १",
+      "phone2": "मोबाईल २",
+      "taluka": "तालुका",
+      "district": "जिल्हा",
+      "state": "राज्य",
+      "pincode": "पिनकोड",
+      "area": "क्षेत्रफळ (एकर)",
+      "treecount": "झाडांची संख्या",
+      "distance": "झाडांमधील अंतर",
+      "plantyear": "लागवड वर्ष",
+      "yield": "मागील उत्पादन",
+      "saletype": "विक्री प्रकार",
+      "variety": "जांभूळ प्रकार",
+      "created_at": "नोंदणी तारीख",
+      "id": "ओळख क्रमांक"
     }
   };
 
@@ -242,57 +283,7 @@
   }
 
   function translateSheetContent(str) {
-    if (!str) return "";
-    var currentLang = state.language || "en";
-    var output = String(str);
-    
-    var terms = [
-      { mr: "राजापुरी", en: "Rajapuri" },
-      { mr: "जांभूळ काळी", en: "Black Jamun" },
-      { mr: "जांभूळकाळी", en: "Black Jamun" },
-      { mr: "फुलजांभूळ", en: "Phul Jamun" },
-      { mr: "गोमंतकी", en: "Gomantaki" },
-      { mr: "पारजांभूळ", en: "Parjambhul" },
-      { mr: "लोकल", en: "Local" },
-      { mr: "सातारा", en: "Satara" },
-      { mr: "कोल्हापूर", en: "Kolhapur" },
-      { mr: "सांगली", en: "Sangli" },
-      { mr: "रत्नागिरी", en: "Ratnagiri" },
-      { mr: "पुणे", en: "Pune" },
-      { mr: "सिंधुदुर्ग", en: "Sindhudurg" },
-      { mr: "विक्री", en: "Selling" },
-      { mr: "स्वतः साठी", en: "Personal Use" },
-      { mr: "स्वतःसाठी", en: "Personal Use" },
-      { mr: "होलसेल", en: "Wholesale" },
-      { mr: "निर्यात", en: "Export" },
-      { mr: "प्रक्रिया", en: "Processing" },
-      { mr: "ठेका", en: "Contract" },
-      { mr: "राजेश पाटील", en: "Rajesh Patil" },
-      { mr: "सुनील जाधव", en: "Sunil जाधव" }, // Sunil Jadhav
-      { mr: "सुनील जाधव", en: "Sunil Jadhav" },
-      { mr: "मंगेश शिंदे", en: "Mangesh Shinde" },
-      { mr: "अनिल कदम", en: "Anil Kadam" },
-      { mr: "प्रकाश मोरे", en: "Prakash More" },
-      { mr: "सचिन गायकवाड", en: "Sachin Gaikwad" },
-      { mr: "जांभूळ शेती", en: "Jamun farming" },
-      { mr: "झाडे", en: "trees" }
-    ];
-
-    var cacheKey = str + "_" + currentLang;
-    if (state.translationCache && state.translationCache[cacheKey]) {
-      return state.translationCache[cacheKey];
-    }
-
-    for (var i = 0; i < terms.length; i++) {
-      var item = terms[i];
-      if (currentLang === "en") {
-        output = output.replace(new RegExp(item.mr, "g"), item.en);
-      } else {
-        output = output.replace(new RegExp(item.en, "g"), item.mr);
-      }
-    }
-    
-    return output;
+    return str || "";
   }
 
   function collectTranslateableStrings(rows) {
@@ -370,24 +361,7 @@
   }
 
   async function translateDataset(rows, targetLang) {
-    if (!rows || !rows.length) return;
-    
-    var rawStrings = collectTranslateableStrings(rows);
-    var uncachedStrings = [];
-    rawStrings.forEach(function (str) {
-      var cacheKey = str + "_" + targetLang;
-      if (!state.translationCache[cacheKey]) {
-        uncachedStrings.push(str);
-      }
-    });
-    
-    if (uncachedStrings.length > 0) {
-      var newTranslations = await translateBatch(uncachedStrings, targetLang);
-      Object.keys(newTranslations).forEach(function (str) {
-        var cacheKey = str + "_" + targetLang;
-        state.translationCache[cacheKey] = newTranslations[str];
-      });
-    }
+    return;
   }
 
   async function toggleLanguage() {
@@ -395,16 +369,9 @@
     state.language = nextLang;
     localStorage.setItem("kf_lang", nextLang);
     
-    showToast(nextLang === "en" ? "Translating data..." : "भाषांतर करत आहे...");
-    
-    try {
-      await translateDataset(state.rows, nextLang);
-    } catch (err) {
-      console.error("Translation error: ", err);
-    }
-    
     translateUI();
-    showToast(nextLang === "en" ? "Switched to English" : "मराठी भाषेत बदलले");
+    render();
+    showToast(nextLang === "en" ? "Switched to English" : "मराठी भाषेत बदलले", "info");
   }
 
   function translateUI() {
@@ -533,6 +500,19 @@
     refs.menuLangToggle = document.getElementById("menuLangToggle");
     refs.menuOverviewLink = document.getElementById("menuOverviewLink");
     refs.menuListingsLink = document.getElementById("menuListingsLink");
+    refs.menuMigrateButton = document.getElementById("menuMigrateButton");
+
+    // Registration refs
+    refs.openRegistrationButton = document.getElementById("openRegistrationButton");
+    refs.closeRegistrationButton = document.getElementById("closeRegistrationButton");
+    refs.registrationModalBackdrop = document.getElementById("registrationModalBackdrop");
+    refs.regStep1 = document.getElementById("regStep1");
+    refs.regStep2 = document.getElementById("regStep2");
+    refs.regPrevBtn = document.getElementById("regPrevBtn");
+    refs.regNextBtn = document.getElementById("regNextBtn");
+    refs.regSubmitBtn = document.getElementById("regSubmitBtn");
+    refs.regStepTitle = document.getElementById("regStepTitle");
+    refs.regFormInputs = document.querySelectorAll("#regStep1 input, #regStep1 textarea, #regStep1 select");
   }
 
   function bindEvents() {
@@ -602,6 +582,52 @@
     }
     if (refs.menuListingsLink) {
       refs.menuListingsLink.addEventListener("click", closeMobileMenu);
+    }
+    if (refs.menuMigrateButton) {
+      refs.menuMigrateButton.addEventListener("click", handleMigration);
+    }
+
+    // Registration events
+    if (refs.openRegistrationButton) {
+      refs.openRegistrationButton.addEventListener("click", openRegistrationModal);
+    }
+    if (refs.closeRegistrationButton) {
+      refs.closeRegistrationButton.addEventListener("click", closeRegistrationModal);
+    }
+    if (refs.regNextBtn) {
+      refs.regNextBtn.addEventListener("click", function() {
+        setRegistrationStep(2);
+      });
+    }
+    if (refs.regPrevBtn) {
+      refs.regPrevBtn.addEventListener("click", function() {
+        setRegistrationStep(1);
+      });
+    }
+    if (refs.regSubmitBtn) {
+      refs.regSubmitBtn.addEventListener("click", handleRegistrationSubmit);
+    }
+
+    // Gallery CTA events
+    var viewAllBtn = document.getElementById("viewAllMembersBtn");
+    if (viewAllBtn) {
+      viewAllBtn.addEventListener("click", function () {
+        var listingsSec = document.getElementById("listings");
+        if (listingsSec) {
+          listingsSec.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+    }
+
+    var joinEJambhulsanghBtn = document.getElementById("joinEJambhulsanghBtn");
+    if (joinEJambhulsanghBtn) {
+      joinEJambhulsanghBtn.addEventListener("click", function () {
+        if (typeof openRegistrationModal === "function") {
+          openRegistrationModal();
+        } else if (refs.openRegistrationButton) {
+          refs.openRegistrationButton.click();
+        }
+      });
     }
 
     document.addEventListener("input", handleFilterInput);
@@ -748,6 +774,7 @@
       closeDetailModal();
       closeColumnMenu();
       closeMobileMenu();
+      closeRegistrationModal();
     }
   }
 
@@ -783,16 +810,206 @@
     if (event.target === refs.detailModalBackdrop) {
       closeDetailModal();
     }
+
+    if (event.target === refs.registrationModalBackdrop) {
+      closeRegistrationModal();
+    }
+
+    // Interactive card console event delegation
+    var viewAllCard = event.target.closest("#viewAllMembersCard");
+    if (viewAllCard) {
+      var listingsSec = document.getElementById("listings");
+      if (listingsSec) {
+        listingsSec.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    var joinCard = event.target.closest("#joinEJambhulsanghCard");
+    if (joinCard) {
+      openRegistrationModal();
+    }
   }
 
   function handleViewportChange() {
     closeFilterSheet();
     closeColumnMenu();
     closeMobileMenu();
+    closeRegistrationModal();
     resetListingViewport();
     render();
   }
 
+  function openRegistrationModal() {
+    console.log("Opening registration modal...");
+    refs.registrationModalBackdrop.classList.add("is-open");
+    document.body.style.overflow = "hidden";
+    setRegistrationStep(1);
+  }
+
+  function closeRegistrationModal() {
+    refs.registrationModalBackdrop.classList.remove("is-open");
+    document.body.style.overflow = "";
+  }
+
+  function setRegistrationStep(step) {
+    if (step === 2) {
+      // Validate Step 1
+      var isValid = true;
+      refs.regFormInputs.forEach(function(input) {
+        if (input.hasAttribute("required") && !input.value.trim()) {
+          isValid = false;
+          input.closest(".field").style.borderColor = "#ef4444";
+        } else {
+          input.closest(".field").style.borderColor = "";
+        }
+      });
+      
+      if (!isValid) {
+        showToast("कृपया सर्व आवश्यक माहिती भरा.", "error");
+        return;
+      }
+    }
+
+    if (step === 1) {
+      refs.regStep1.classList.remove("hidden");
+      refs.regStep2.classList.add("hidden");
+      refs.regNextBtn.classList.remove("hidden");
+      refs.regPrevBtn.classList.add("hidden");
+      refs.regSubmitBtn.classList.add("hidden");
+      refs.regStepTitle.textContent = "Step 1 of 2";
+    } else {
+      refs.regStep1.classList.add("hidden");
+      refs.regStep2.classList.remove("hidden");
+      refs.regNextBtn.classList.add("hidden");
+      refs.regPrevBtn.classList.remove("hidden");
+      refs.regSubmitBtn.classList.remove("hidden");
+      refs.regStepTitle.textContent = "Step 2 of 2";
+    }
+  }
+
+  function handleRegistrationSubmit() {
+    var formData = {};
+    formData["पूर्ण नाव"] = document.getElementById("regName").value.trim();
+    formData["गावाचे नाव"] = document.getElementById("regVillage").value.trim();
+    formData["पत्ता"] = document.getElementById("regAddress").value.trim();
+    formData["मोबाईल क्रमांक (१)"] = document.getElementById("regPhone1").value.trim();
+    formData["मोबाईल क्रमांक (२)"] = document.getElementById("regPhone2").value.trim();
+    formData["तालुका"] = document.getElementById("regTaluka").value.trim();
+    formData["जिल्हा"] = document.getElementById("regDistrict").value.trim();
+    formData["राज्य"] = document.getElementById("regState").value.trim();
+    formData["पिनकोड"] = document.getElementById("regPincode").value.trim();
+    formData["एकूण क्षेत्रफळ (एकर / हेक्टर)"] = document.getElementById("regArea").value.trim();
+    formData["झाडांची संख्या"] = parseInt(document.getElementById("regTreeCount").value.trim()) || 0;
+    formData["दोन झाडांमधील अंतर (मीटर)"] = document.getElementById("regDistance").value.trim();
+    formData["झाडांची लागवड केलेले वर्ष"] = parseInt(document.getElementById("regPlantYear").value.trim()) || 0;
+    formData["मागील वर्षीचे उत्पादन (टन मध्ये)"] = document.getElementById("regYield").value.trim();
+    formData["जांभूळ विक्री / जांभूळ थिकण"] = document.getElementById("regSaleType").value.trim();
+    formData["जांभूळ जात / वाण"] = document.getElementById("regVariety").value.trim();
+
+    var options = {
+      "key": "rzp_test_SqlInZX77UVWUo",
+      "amount": "10000", // Amount in paise (10000 = 100 INR)
+      "currency": "INR",
+      "name": "Jambhulsangh",
+      "description": "Farmer Registration Fee",
+      "image": "logo.jpeg",
+      "handler": function (response) {
+        // This code runs ONLY if payment is successful
+        formData.timestamp = new Date().toISOString();
+        
+        showToast("Payment Successful! Saving your details...", "info");
+        
+        // Send to Backend (Supabase)
+        submitToSupabase(formData);
+      },
+      "prefill": {
+        "name": formData["पूर्ण नाव"] || "",
+        "contact": formData["मोबाईल क्रमांक (१)"] || ""
+      },
+      "theme": {
+        "color": "#004d2c"
+      }
+    };
+
+    var rzp = new Razorpay(options);
+    rzp.on('payment.failed', function (response){
+      showToast("Payment Failed: " + response.error.description, "error");
+    });
+    rzp.open();
+  }
+
+  async function submitToSupabase(data) {
+    try {
+      await window.KFDatabaseService.insertRow(data);
+      showToast("नोंदणी यशस्वी झाली! आम्ही लवकरच संपर्क करू.", "success");
+      closeRegistrationModal();
+      loadData({ reason: "auto", announce: false }); // Refresh data
+    } catch (err) {
+      console.error(err);
+      showToast("नोंदणी जतन करताना एरर आली. कृपया संपर्क करा.", "error");
+    }
+  }
+
+  async function handleMigration() {
+    if (!confirm("Are you sure you want to migrate all data from Google Sheets to Supabase? This should only be done once.")) return;
+    
+    showToast("Migration started...", "info");
+    
+    try {
+      // 1. Fetch from Sheets
+      var result = await window.KFSheetsService.fetchRows({});
+      var sheetData = result.objects; // Array of objects with translated keys
+      
+      if (!sheetData || sheetData.length === 0) {
+        showToast("No data found in Google Sheets to migrate.", "error");
+        return;
+      }
+      
+      // 2. Map to Supabase format
+      var supabaseData = sheetData.map(function(row) {
+        // Convert DD/MM/YYYY HH:MM:SS to ISO format
+        var rawDate = row["Date"] || "";
+        var isoDate = new Date().toISOString();
+        if (rawDate) {
+          var parts = rawDate.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})\s*(\d{1,2})?:?(\d{2})?:?(\d{2})?/);
+          if (parts) {
+            isoDate = parts[3] + "-" + parts[2].padStart(2, "0") + "-" + parts[1].padStart(2, "0") +
+              "T" + (parts[4] || "00").padStart(2, "0") + ":" + (parts[5] || "00") + ":" + (parts[6] || "00");
+          }
+        }
+        return {
+          "timestamp": isoDate,
+          "पूर्ण नाव": row["Title"] || row["Name"] || "",
+          "गावाचे नाव": row["Location"] || row["Village"] || "",
+          "पत्ता": row["Summary"] || row["Address"] || "",
+          "मोबाईल क्रमांक (१)": row["Primary Phone"] || row["Phone 1"] || "",
+          "मोबाईल क्रमांक (२)": row["Secondary Phone"] || row["Phone 2"] || "",
+          "तालुका": row["Taluka"] || "",
+          "जिल्हा": row["Region"] || row["District"] || "",
+          "राज्य": row["State"] || "Maharashtra",
+          "पिनकोड": row["Pincode"] || "",
+          "एकूण क्षेत्रफळ (एकर / हेक्टर)": row["Land Area"] || row["Area"] || "",
+          "झाडांची संख्या": parseInt(row["Tree Count"] || row["Treecount"]) || 0,
+          "दोन झाडांमधील अंतर (मीटर)": row["Tree Spacing"] || row["Distance"] || "",
+          "झाडांची लागवड केलेले वर्ष": parseInt(row["Planting Year"] || row["Plantyear"]) || 0,
+          "मागील वर्षीचे उत्पादन (टन मध्ये)": row["Last Year Production"] || row["Yield"] || "",
+          "जांभूळ विक्री / जांभूळ थिकण": row["Stage"] || row["Saletype"] || "",
+          "जांभूळ जात / वाण": row["Category"] || row["Variety"] || ""
+        };
+      });
+      
+      // 3. Batch Insert into Supabase via REST API
+      await window.KFDatabaseService.insertMany(supabaseData);
+      
+      showToast("Migration successful! " + supabaseData.length + " records moved.", "success");
+      closeMobileMenu();
+      loadData({ reason: "auto", announce: true }); // Refresh dashboard from Supabase
+      
+    } catch (err) {
+      console.error("Migration error:", err);
+      showToast("Migration failed: " + err.message, "error");
+    }
+  }
   function toggleTheme() {
     state.theme = state.theme === "dark" ? "light" : "dark";
     applyTheme(state.theme);
@@ -920,7 +1137,10 @@
     }
 
     try {
-      var result = await window.KFSheetsService.fetchRows({});
+      if (!window.KFDatabaseService) {
+        throw new Error("Database service not loaded.");
+      }
+      var result = await window.KFDatabaseService.fetchRows();
       var normalized = normalizeSheetValues(result.values);
 
       state.rows = normalized.rows;
@@ -931,11 +1151,7 @@
       hydrateSort(normalized);
       hydrateVisibleColumns();
       
-      try {
-        await translateDataset(state.rows, state.language);
-      } catch (err) {
-        console.error("Failed to translate spreadsheet rows on load", err);
-      }
+      // Disables all data row translation - exact data from Supabase/Google Sheets is kept.
 
       state.loading = false;
       state.sync.mode = result.mode;
@@ -951,7 +1167,7 @@
       if (options && options.announce) {
         showToast(
           result.mode === "live"
-            ? "Dashboard refreshed from Google Sheets."
+            ? "Dashboard refreshed from Supabase."
             : result.message,
           result.mode === "live" ? "info" : "error"
         );
@@ -1126,11 +1342,9 @@
     var owner = pickRaw(raw, semanticMap.owner);
     var location = pickRaw(raw, semanticMap.location);
     var stage = pickRaw(raw, semanticMap.stage);
-    var summary =
-      pickRaw(raw, semanticMap.summary) ||
-      location ||
-      "Synced from a Google Sheets powered frontend dashboard.";
+    var summary = pickRaw(raw, semanticMap.summary) || "";
     var image = pickRaw(raw, semanticMap.image);
+    var phone = pickRaw(raw, semanticMap.phone);
     var priceValue = parseNumericValue(priceRaw);
     var dateValue = parseDateValue(dateRaw);
     var excludedKeys = {};
@@ -1162,6 +1376,7 @@
       image: image,
       owner: owner,
       location: location,
+      phone: phone,
       stage: stage,
       priceRaw: priceRaw,
       priceValue: priceValue,
@@ -1422,11 +1637,55 @@
       return;
     }
 
-    refs.statsGrid.innerHTML = statCardMarkup(
-      "Total entries",
-      state.rows.length,
-      "Full synced inventory available for search and filtering."
-    );
+    refs.statsGrid.innerHTML =
+      '<div style="display: flex; flex-direction: column; gap: 0.85rem; width: 100%; max-width: 1200px; margin: 0 auto; padding: 0.5rem 0;">' +
+
+      // Pill 1: Join e-Jambhulsangh Portal (Interactive Pill Bar) - FIRST
+      '  <article class="console-pill-bar join-pill" id="joinEJambhulsanghCard">' +
+      '    <span class="leaf-particle lp1">🍃</span>' +
+      '    <span class="leaf-particle lp2">🌱</span>' +
+      '    <span class="leaf-particle lp3">🍃</span>' +
+      '    <span class="comet-track-cw"></span>' +
+      '    <span class="comet-track-ccw"></span>' +
+      '    <div class="pill-icon-wrapper" style="width: 44px; height: 44px; border-radius: 50%; background: rgba(255, 255, 255, 0.12); display: flex; align-items: center; justify-content: center; font-size: 1.35rem; flex-shrink: 0; transition: transform 0.3s ease;">' +
+      '      🌱' +
+      '    </div>' +
+      '    <div class="pill-text-wrapper" style="display: flex; flex-direction: column; text-align: left; margin-left: 1rem; flex-grow: 1; color: white;">' +
+      '      <span style="font-size: 1.05rem; font-weight: 700; line-height: 1.2;">ई-जांभूळसंघ मध्ये सामील व्हा / Join Community</span>' +
+      '      <span style="font-size: 0.82rem; color: rgba(255, 255, 255, 0.85); font-weight: 500; margin-top: 0.15rem;">Become a member today / आजच नोंदणी करा</span>' +
+      '    </div>' +
+      '    <div class="pill-arrow-wrapper" style="width: 38px; height: 38px; border-radius: 50%; background: rgba(255, 255, 255, 0.12); display: flex; align-items: center; justify-content: center; font-size: 1.15rem; color: white; margin-left: auto; transition: transform 0.3s ease;">' +
+      '      →' +
+      '    </div>' +
+      '  </article>' +
+
+      // Pill 2: View Members Directory (Interactive Pill Bar) - SECOND
+      '  <article class="console-pill-bar directory-pill" id="viewAllMembersCard">' +
+      '    <div class="pill-icon-wrapper" style="width: 44px; height: 44px; border-radius: 50%; background: rgba(124, 58, 237, 0.08); display: flex; align-items: center; justify-content: center; font-size: 1.35rem; flex-shrink: 0; transition: transform 0.3s ease;">' +
+      '      👥' +
+      '    </div>' +
+      '    <div class="pill-text-wrapper" style="display: flex; flex-direction: column; text-align: left; margin-left: 1rem; flex-grow: 1;">' +
+      '      <span style="font-size: 1.05rem; font-weight: 700; color: var(--text); line-height: 1.2;">सर्व सदस्य पहा / View All Members</span>' +
+      '    </div>' +
+      '    <div class="pill-arrow-wrapper" style="width: 38px; height: 38px; border-radius: 50%; background: rgba(124, 58, 237, 0.06); display: flex; align-items: center; justify-content: center; font-size: 1.15rem; color: var(--primary); margin-left: auto; transition: transform 0.3s ease;">' +
+      '      →' +
+      '    </div>' +
+      '  </article>' +
+
+      // Pill 3: Live Total Entries Counter (Stats Pill Bar) - THIRD
+      '  <article class="console-pill-bar stats-pill">' +
+      '    <div class="pill-icon-wrapper" style="width: 44px; height: 44px; border-radius: 50%; background: rgba(16, 185, 129, 0.08); display: flex; align-items: center; justify-content: center; font-size: 1.35rem; flex-shrink: 0;">' +
+      '      📊' +
+      '    </div>' +
+      '    <div class="pill-text-wrapper" style="display: flex; flex-direction: column; text-align: left; margin-left: 1rem; flex-grow: 1;">' +
+      '      <span style="font-size: 1.05rem; font-weight: 700; color: var(--text); line-height: 1.2;">एकूण सदस्य / Total Members</span>' +
+      '    </div>' +
+      '    <div class="pill-badge-wrapper" style="padding: 0.35rem 1rem; border-radius: 999px; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; font-weight: 800; font-size: 1.15rem; font-family: \'Poppins\', sans-serif; margin-left: auto; box-shadow: 0 4px 10px rgba(124, 58, 237, 0.2);">' +
+      '      ' + escapeHtml(String(state.rows.length)) +
+      '    </div>' +
+      '  </article>' +
+
+      '</div>';
   }
 
   function renderChart() {
@@ -1472,7 +1731,7 @@
             return (
               '<div class="bar-row">' +
               '<div class="bar-meta"><span>' +
-              escapeHtml(translateSheetContent(item.label)) +
+              escapeHtml(item.label) +
               "</span><strong>" +
               escapeHtml(String(item.count)) +
               "</strong></div>" +
@@ -1708,35 +1967,36 @@
     var row = getSelectedRow();
 
     if (!row) {
-      refs.detailTitle.textContent = t("Select a record");
+      refs.detailTitle.textContent = "Select a record";
       refs.detailBody.innerHTML = "";
       return;
     }
 
-    refs.detailTitle.textContent = translateSheetContent(row.title);
+    refs.detailTitle.textContent = row.title;
     refs.detailBody.innerHTML =
-      '<div class="detail-summary">' +
-      renderStatusBadge(row.status) +
-      "<p>" +
-      escapeHtml(translateSheetContent(row.summary)) +
-      "</p>" +
-      "</div>" +
-      '<div class="detail-meta">' +
-      detailFieldMarkup(t("Category"), translateSheetContent(row.category)) +
-      detailFieldMarkup(t("Date"), row.dateLabel) +
-      detailFieldMarkup(t("Price"), row.priceLabel) +
-      "</div>" +
+      '<div class="detail-summary" style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; color: var(--text-soft); font-size: 1.05rem; font-weight: 500;">' +
+      '<span>📍</span> ' + escapeHtml(row.location || "-") +
+      '</div>' +
       '<div class="detail-records">' +
       state.columns
         .filter(function (column) {
-          return row.raw[column.key];
+          var lbl = String(column.label || "").trim();
+          var key = String(column.key || "").trim();
+          return row.raw[column.key] && 
+                 lbl !== "Sr. No." && 
+                 lbl !== "timestamp" && 
+                 lbl !== "created_at" && 
+                 lbl !== "id" &&
+                 key !== "sr_no" &&
+                 key !== "timestamp" &&
+                 key !== "created_at" &&
+                 key !== "id";
         })
         .map(function (column) {
           var displayValue = getDisplayText(row, column);
-          displayValue = translateSheetContent(displayValue);
           return (
             '<div class="detail-record"><strong>' +
-            escapeHtml(t(column.label)) +
+            escapeHtml(column.label) +
             "</strong><span>" +
             escapeHtml(displayValue) +
             "</span></div>"
@@ -1859,7 +2119,7 @@
   }
 
   function cardMarkup(row, index) {
-    var locationText = row.location ? translateSheetContent(row.location) : "-";
+    var locationText = row.location || "-";
     var statusText = String(row.status || "").toLowerCase();
     
     // Choose beautiful gradients for the dynamic left accent bar
@@ -1869,6 +2129,10 @@
     } else if (statusText.indexOf("pending") !== -1 || statusText.indexOf("review") !== -1) {
       accentGradient = "linear-gradient(180deg, #f97316, #fbbf24)"; // Warm Sunset Amber
     }
+
+    var phoneNumber = row.phone || "";
+    var cleanPhone = phoneNumber.replace(/\D/g, "");
+    if (cleanPhone && cleanPhone.length === 10) cleanPhone = "91" + cleanPhone;
 
     return (
       '<article class="listing-card" style="animation-delay:' +
@@ -1886,18 +2150,24 @@
       '<div class="card-body" style="display: flex; flex-direction: column; gap: 0.5rem; padding-bottom: 0.2rem; padding-right: 1.5rem;">' +
       '<h3 style="margin: 0; font-family: \'Poppins\', sans-serif; font-size: 1.15rem; letter-spacing: -0.02em; color: var(--text); line-height: 1.35; font-weight: 600;">' +
       (row.raw && row.raw['sr_no'] ? '<span style="color: var(--primary); font-weight: 700; margin-right: 0.35rem;">#' + escapeHtml(row.raw['sr_no']) + '</span> ' : '') +
-      escapeHtml(translateSheetContent(row.title)) +
+      escapeHtml(row.title) +
       '</h3>' +
       '<div class="card-location" style="display: flex; align-items: center; gap: 0.45rem; color: var(--text-muted); font-size: 0.92rem;">' +
       '<span class="location-pin" style="display: inline-block; font-size: 1.05rem; transition: transform 0.2s ease;">📍</span>' +
       '<span style="font-weight: 500;">' + escapeHtml(locationText) + '</span>' +
       '</div>' +
       '</div>' +
-      '<div class="card-actions" style="margin-top: 1.1rem; display: flex;">' +
-      '<button class="button button-primary" style="width: 100%; text-align: center; pointer-events: none;" type="button">' + 
-      escapeHtml(t("Details")) + 
-      '</button>' +
-      "</div></article>"
+      
+      '<div class="card-actions" style="margin-top: 1.1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">' +
+      '<a href="tel:' + cleanPhone + '" class="button" style="padding: 0.65rem 0.5rem; font-size: 0.92rem; background: #004d2c; color: white; border-radius: 999px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 600;" onclick="event.stopPropagation()">' +
+      '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg> ' + 
+      (state.language === "en" ? "Contact" : "संपर्क") +
+      '</a>' +
+      '<a href="https://wa.me/' + cleanPhone + '" target="_blank" class="button" style="padding: 0.65rem 0.5rem; font-size: 0.92rem; background: #e8fcf0; color: #004d2c; border: 1px solid #c3f2d7; border-radius: 999px; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 600;" onclick="event.stopPropagation()">' +
+      '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg> WhatsApp' +
+      '</a>' +
+      '</div>' +
+      "</article>"
     );
   }
 
@@ -1909,9 +2179,9 @@
           if (column.semantic === "title") {
             return (
               '<td><div class="title-stack"><strong>' +
-              escapeHtml(translateSheetContent(row.title)) +
+              escapeHtml(row.title) +
               "</strong><span>" +
-              escapeHtml(truncate(translateSheetContent(row.summary), 110)) +
+              escapeHtml(truncate(row.summary, 110)) +
               "</span></div></td>"
             );
           }
@@ -1938,7 +2208,7 @@
       return '<span class="table-value-muted">-</span>';
     }
 
-    return escapeHtml(translateSheetContent(displayText));
+    return escapeHtml(displayText);
   }
 
   function getDisplayText(row, column) {
@@ -2312,7 +2582,7 @@
     try {
       return cleanText(value)
         .toLowerCase()
-        .replace(/[^\p{L}\p{N}]+/gu, "_")
+        .replace(/[^\p{L}\p{N}\p{M}]+/gu, "_")
         .replace(/^_+|_+$/g, "");
     } catch (e) {
       return cleanText(value)

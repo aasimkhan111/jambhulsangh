@@ -160,7 +160,7 @@ img {
   justify-content: space-between;
   gap: 0.75rem;
   padding: 0.85rem 1rem;
-  border-radius: 999px;
+  border-radius: var(--radius-xl);
   transform: translateX(-50%);
 }
 
@@ -201,13 +201,20 @@ img {
 
 .brand-copy strong {
   font-family: "Poppins", sans-serif;
-  font-size: 0.95rem;
-  letter-spacing: -0.02em;
+  font-size: 1.22rem; /* Increased font size */
+  font-weight: 800; /* Extra bold */
+  letter-spacing: 0.05em; /* Premium spacing for all-caps */
+  text-transform: uppercase; /* Automatically capitalizes to JAMBHULSANGH */
 }
 
 .brand-copy small {
   color: var(--text-soft);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+}
+
+#syncIndicator {
+  margin-right: 0.65rem !important; /* Perfect gap between pulsing dot/pill and other actions */
 }
 
 .nav-links {
@@ -578,8 +585,10 @@ img {
 }
 
 .stats-grid {
-  display: block;
-  padding: 1rem 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem 0;
   width: 100%;
 }
 
@@ -693,18 +702,20 @@ img {
   top: var(--sticky-offset);
   z-index: 20;
   display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-  padding: 0.85rem;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
 }
 
 .search-shell {
+  flex: 1;
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 0.8rem;
-  min-height: 56px;
-  padding: 0.25rem 0.3rem 0.25rem 1rem;
+  gap: 0.6rem;
+  min-height: 48px;
+  padding: 0.25rem 0.3rem 0.25rem 0.85rem;
   border-radius: 999px;
   background: var(--surface-strong);
   border: 1px solid var(--border);
@@ -712,7 +723,7 @@ img {
 
 .search-icon {
   color: var(--text-soft);
-  font-size: 0.82rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -725,21 +736,22 @@ img {
   background: transparent;
   border: 0;
   outline: none;
+  font-size: 0.95rem;
 }
 
 .clear-button {
-  min-height: 44px;
-  padding: 0 0.95rem;
+  min-height: 40px;
+  padding: 0 0.8rem;
   color: var(--primary);
   background: transparent;
   font-weight: 700;
+  font-size: 0.85rem;
 }
 
 .toolbar-actions {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+  gap: 0.65rem;
 }
 
 .list-surface {
@@ -1490,13 +1502,12 @@ img {
   }
 
   .toolbar {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    padding: 0.85rem 1.15rem;
   }
 
   .search-shell {
-    flex: 1;
+    min-height: 56px;
+    padding-left: 1.25rem;
   }
 
   .toolbar-actions {
@@ -1528,23 +1539,27 @@ img {
 @media (max-width: 1023px) {
   .floating-nav {
     top: 0.5rem;
-    padding: 0.5rem 0.75rem;
-    gap: 0.5rem;
+    padding: 0.45rem 0.65rem;
+    gap: 0.35rem;
     width: calc(100% - 1rem);
   }
 
   .brand-lockup {
-    gap: 0.5rem;
+    gap: 0.35rem;
+    min-width: 0;
+    flex-shrink: 1;
   }
 
   .brand-mark {
-    width: 4.2rem;
-    height: 4.2rem;
+    width: 2.8rem; /* Premium compact mobile logo size */
+    height: 2.8rem;
     border-radius: 50%;
+    flex-shrink: 0;
   }
 
   .brand-copy strong {
-    font-size: 0.85rem;
+    font-size: 0.92rem; /* Clean, all-caps, modern size */
+    white-space: nowrap;
   }
 
   .brand-copy small {
@@ -1554,7 +1569,8 @@ img {
   .nav-actions {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.35rem;
+    flex-shrink: 0;
   }
 
   .nav-actions .compact-button {
@@ -1562,6 +1578,7 @@ img {
     font-size: 0.8rem;
     min-height: 36px;
     border-radius: 12px;
+    white-space: nowrap !important; /* Prevent text wrapping inside buttons */
   }
 
   /* Turn the status pill into a beautiful compact pulsing indicator */
@@ -1578,6 +1595,8 @@ img {
     overflow: hidden;
     position: relative;
     display: inline-block;
+    margin-right: 0.25rem !important; /* Secure perfect spacing between dot and buttons */
+    flex-shrink: 0 !important;
   }
 
   #syncIndicator.is-live {
@@ -1645,5 +1664,475 @@ img {
   100% {
     transform: scale(0.95);
     box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+  }
+}
+
+/* Registration Modal Specific Styles */
+.registration-step {
+  animation: fade-up 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.registration-step.hidden {
+  display: none;
+}
+
+#registrationContent {
+  padding-top: 0.5rem;
+}
+
+.field textarea.control {
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 0.85rem 1rem;
+}
+
+#paymentQR img {
+  display: block;
+  max-width: 100%;
+}
+
+.sheet-footer {
+  display: flex;
+  gap: 0.85rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+  margin-top: 1.5rem;
+}
+
+/* ── Admin Panel Styles ── */
+.pin-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #c4b5fd;
+  background: transparent;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.pin-dot.filled {
+  background: #7c3aed;
+  border-color: #7c3aed;
+  transform: scale(1.15);
+}
+
+.pin-key {
+  padding: 0.9rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pin-key:active {
+  transform: scale(0.92);
+  background: var(--border);
+}
+
+.admin-tab {
+  flex: 1;
+  padding: 0.75rem 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.admin-tab.active {
+  color: #7c3aed;
+  border-bottom-color: #7c3aed;
+}
+
+.admin-input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  background: var(--bg, var(--background));
+  color: var(--text);
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.admin-input:focus {
+  outline: none;
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+
+/* Premium Portal Cards Styles */
+.console-portal-card {
+  transition: all 0.32s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+.console-portal-card::before {
+  display: none !important; /* Remove the top gradient bar for portal cards */
+}
+.console-portal-card:hover {
+  transform: translateY(-8px) scale(1.025) !important;
+  box-shadow: 0 20px 35px rgba(124, 58, 237, 0.14) !important;
+  border-color: var(--primary) !important;
+}
+.console-portal-card:hover .portal-card-icon {
+  transform: scale(1.22) rotate(5deg) !important;
+}
+.console-portal-card:hover .arrow {
+  transform: translateX(6px) !important;
+}
+
+.join-portal-card:hover {
+  box-shadow: 0 20px 35px rgba(16, 139, 100, 0.3) !important;
+  border-color: #34d399 !important;
+}
+
+/* Pulse animation for live stats indicator */
+@keyframes pulseGlow {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.25);
+    opacity: 1;
+    box-shadow: 0 0 14px #10b981, 0 0 4px #10b981;
+  }
+  100% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+}
+
+/* Custom Console Template Layout Styles */
+.console-layout-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  width: 100%;
+}
+@media (max-width: 768px) {
+  .console-layout-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+.directory-card {
+  background: linear-gradient(135deg, #fefdfb, #f6f0e2) !important;
+  border: 1px solid #e6dabd !important;
+  box-shadow: 0 10px 25px rgba(230, 218, 189, 0.2) !important;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+.directory-card::before {
+  display: none !important;
+}
+.directory-card:hover {
+  transform: translateY(-6px) scale(1.015) !important;
+  box-shadow: 0 18px 30px rgba(230, 218, 189, 0.4) !important;
+  border-color: #d1b46a !important;
+}
+.directory-card:hover .portal-card-icon {
+  transform: scale(1.15) rotate(-3deg) !important;
+}
+.directory-card:hover .arrow {
+  transform: translateX(5px) !important;
+}
+
+.total-members-card {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow-soft) !important;
+  transition: all 0.3s ease !important;
+}
+.total-members-card::before {
+  background: linear-gradient(90deg, #daa520, #b8860b) !important;
+}
+
+.join-community-card-full {
+  background: linear-gradient(135deg, #0e4c27, #072f17) !important;
+  border: 1px solid rgba(16, 139, 100, 0.35) !important;
+  box-shadow: 0 12px 30px rgba(7, 47, 23, 0.25) !important;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+.join-community-card-full::before {
+  display: none !important;
+}
+.join-community-card-full:hover {
+  transform: translateY(-6px) scale(1.012) !important;
+  box-shadow: 0 18px 35px rgba(16, 139, 100, 0.35) !important;
+  border-color: #34d399 !important;
+}
+.join-community-card-full:hover .portal-card-icon {
+  transform: scale(1.18) rotate(5deg) !important;
+}
+.join-community-card-full:hover .arrow {
+  transform: translateX(5px) !important;
+}
+
+/* Premium Pill Bar Styles matching template screenshot */
+.console-pill-bar {
+  display: flex;
+  align-items: center;
+  padding: 0.85rem 1.25rem;
+  border-radius: var(--radius-xl); /* Matches gallery photos exactly */
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px solid #000000 !important; /* Set solid high-contrast black border */
+  box-shadow: var(--shadow-soft) !important;
+  transition: all 0.28s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+}
+
+.console-pill-bar:hover {
+  transform: translateY(-3px) scale(1.012) !important;
+}
+
+.directory-pill {
+  background: var(--surface) !important;
+  cursor: pointer;
+}
+.directory-pill:hover {
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08) !important;
+}
+.directory-pill:hover .pill-icon-wrapper {
+  transform: scale(1.12) rotate(-5deg) !important;
+}
+.directory-pill:hover .pill-arrow-wrapper {
+  transform: translateX(4px) !important;
+}
+
+.stats-pill {
+  background: var(--surface) !important;
+}
+
+.join-pill {
+  position: relative;
+  z-index: 1;
+  background: #000000 !important; /* solid black fallback base */
+  border: none !important; /* Simulated border */
+  overflow: hidden;
+  cursor: pointer;
+  box-sizing: border-box;
+  animation: joinPulse 3s infinite ease-in-out !important;
+}
+
+.join-pill:hover {
+  transform: translateY(-4px) scale(1.018) !important;
+  box-shadow: 0 14px 28px rgba(16, 139, 100, 0.45) !important;
+}
+
+/* Clockwise Golden Comet Track */
+.comet-track-cw {
+  position: absolute;
+  z-index: -3;
+  left: -50%;
+  top: -150%;
+  width: 200%;
+  height: 400%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    transparent 42%,
+    #fbbf24 50%, /* Golden Comet */
+    transparent 58%,
+    transparent 100%
+  ) !important;
+  animation: spinBorder 3.2s infinite linear !important;
+}
+
+/* Counter-Clockwise Emerald Comet Track */
+.comet-track-ccw {
+  position: absolute;
+  z-index: -3;
+  left: -50%;
+  top: -150%;
+  width: 200%;
+  height: 400%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0%,
+    transparent 42%,
+    #10b981 50%, /* Emerald Comet */
+    transparent 58%,
+    transparent 100%
+  ) !important;
+  animation: spinBorderRev 4s infinite linear !important;
+}
+
+/* Inner card cover leaving a perfect 2px border mask */
+.join-pill::after {
+  content: '';
+  position: absolute;
+  z-index: -2; /* Above comets, below children */
+  inset: 2px;
+  border-radius: calc(var(--radius-xl) - 2px);
+  background: linear-gradient(135deg, #0e5b35, #149c5e, #0e5b35) !important;
+  background-size: 200% auto !important;
+  animation: gradientMove 5s infinite linear !important;
+}
+
+/* Beautiful seedling organic grow continuous loop */
+.join-pill .pill-icon-wrapper {
+  animation: plantGrow 3s infinite ease-in-out !important;
+}
+
+/* Beautiful right arrow indicator continuous loop slide */
+.join-pill .pill-arrow-wrapper {
+  animation: arrowSlide 1.5s infinite ease-in-out !important;
+}
+
+/* OPTION 1: Floating Organic Leaf Particles CSS */
+.leaf-particle {
+  position: absolute;
+  pointer-events: none;
+  font-size: 1.15rem;
+  z-index: 10;
+  opacity: 0;
+  bottom: -20px;
+}
+
+.lp1 {
+  left: 20%;
+  animation: floatLeaf1 4.2s infinite ease-in-out;
+}
+
+.lp2 {
+  left: 50%;
+  animation: floatLeaf2 4.8s infinite ease-in-out 1.5s;
+}
+
+.lp3 {
+  left: 80%;
+  animation: floatLeaf3 3.9s infinite ease-in-out 0.7s;
+}
+
+@keyframes floatLeaf1 {
+  0% {
+    bottom: -20px;
+    transform: translateX(0) rotate(0deg) scale(0.6);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.7;
+  }
+  80% {
+    opacity: 0.7;
+  }
+  100% {
+    bottom: 80px;
+    transform: translateX(-35px) rotate(180deg) scale(1.1);
+    opacity: 0;
+  }
+}
+
+@keyframes floatLeaf2 {
+  0% {
+    bottom: -20px;
+    transform: translateX(0) rotate(0deg) scale(0.5);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.8;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    bottom: 90px;
+    transform: translateX(30px) rotate(-140deg) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes floatLeaf3 {
+  0% {
+    bottom: -20px;
+    transform: translateX(0) rotate(0deg) scale(0.7);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  80% {
+    opacity: 0.6;
+  }
+  100% {
+    bottom: 75px;
+    transform: translateX(-20px) rotate(220deg) scale(1.2);
+    opacity: 0;
+  }
+}
+
+@keyframes spinBorder {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes spinBorderRev {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes plantGrow {
+  0%, 100% { transform: scale(1) rotate(0deg); }
+  25% { transform: scale(1.12) rotate(-8deg); }
+  75% { transform: scale(1.12) rotate(8deg); }
+}
+
+@keyframes arrowSlide {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(5px); }
+}
+
+@keyframes joinPulse {
+  0% {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 4px 15px rgba(16, 139, 100, 0.2), 0 0 0 0 rgba(16, 139, 100, 0.3);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.008);
+    box-shadow: 0 10px 22px rgba(16, 139, 100, 0.38), 0 0 0 6px rgba(16, 139, 100, 0);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 4px 15px rgba(16, 139, 100, 0.2), 0 0 0 0 rgba(16, 139, 100, 0.3);
+  }
+}
+
+@keyframes gradientMove {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
   }
 }

@@ -16,13 +16,18 @@
       Category: category,
       Status: status,
       "Tree Count": String(treeCount),
+      "Farm Area": (5 + index) + " Acres",
+      "Soil Type": index % 2 === 0 ? "Loam & Volcanic Ash" : "Clay & Sandy",
+      "Rating": (4 + (index % 10) / 10).toFixed(1),
+      "Reviews": (10 + index * 5).toString(),
+      "Phone": "+9198" + (10000000 + index).toString().slice(-8),
       Date: createdAt.toISOString().slice(0, 10),
       Location: locations[index % locations.length],
       Owner: owners[index % owners.length],
       Stage: stages[index % stages.length],
       Summary:
         locations[index % locations.length] + " - " + category + " जांभूळ शेती, " + treeCount + " झाडे",
-      Image: "",
+      Image: (index % 14 + 1) + ".jpeg",
     };
   });
 

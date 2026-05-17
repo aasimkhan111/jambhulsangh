@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Us - Jambhulsangh Growers Network</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/styles/main.css?v=18" />
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 0;
+        transition: background 0.3s ease, color 0.3s ease;
+      }
+      .content-wrapper {
+        max-width: var(--max-width);
+        margin: 8rem auto 4rem;
+        padding: 0 1.5rem;
+      }
+      .about-header {
+        text-align: center;
+        margin-bottom: 3.5rem;
+      }
+      .about-header h1 {
+        font-family: 'Poppins', sans-serif;
+        font-size: clamp(2.2rem, 5vw, 3.5rem);
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0 0 1rem;
+        line-height: 1.15;
+      }
+      .about-header p {
+        font-size: clamp(1rem, 2.5vw, 1.25rem);
+        color: var(--text-soft);
+        max-width: 700px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+      .about-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        margin-top: 3rem;
+      }
+      @media (min-width: 768px) {
+        .about-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+      .glass-card {
+        background: var(--surface);
+        border: 2px solid #000000;
+        border-radius: var(--radius-xl);
+        padding: 2.5rem;
+        box-shadow: var(--shadow-soft);
+        position: relative;
+        overflow: hidden;
+      }
+      .glass-card h3 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.5rem;
+        margin-top: 0;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+      .glass-card p {
+        line-height: 1.7;
+        color: var(--text-soft);
+        font-size: 1.05rem;
+      }
+      .highlight-list {
+        list-style: none;
+        padding: 0;
+        margin: 1.5rem 0 0;
+      }
+      .highlight-list li {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        font-weight: 500;
+        color: var(--text);
+      }
+      .highlight-list li::before {
+        content: '✓';
+        color: var(--primary);
+        font-weight: 800;
+        font-size: 1.15rem;
+      }
+      .back-home-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        background: linear-gradient(135deg, #0e5b35, #149c5e) !important;
+        color: white !important;
+        font-weight: 700;
+        border: 2px solid #000000 !important;
+        padding: 0.85rem 2rem;
+        border-radius: var(--radius-xl);
+        font-family: 'Poppins', sans-serif;
+        text-decoration: none;
+        transition: transform 0.28s ease, box-shadow 0.28s ease;
+        margin-top: 2rem;
+        cursor: pointer;
+      }
+      .back-home-btn:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 10px 20px rgba(16, 139, 100, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="floating-nav glass" aria-label="Main navigation">
+      <a class="brand-lockup" href="index.html">
+        <img class="brand-mark brand-logo" src="logo2.png" alt="Jambhulsangh logo" />
+        <span class="brand-copy">
+          <strong>Jambhulsangh</strong>
+          <small>Jambhul growers network</small>
+        </span>
+      </a>
+
+      <div class="nav-actions">
+        <a href="index.html" class="button button-secondary compact-button" style="border: 2px solid #000000 !important; font-family: 'Poppins', sans-serif; font-weight: 600; text-decoration: none;">
+          🏠 Home / मुख्यपृष्ठ
+        </a>
+        <button id="themeToggleBtn" class="button button-secondary compact-button" type="button" style="border: 2px solid #000000 !important;">
+          Dark mode
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Content Shell -->
+    <main class="content-wrapper">
+      <div class="about-header">
+        <h1>आमच्याबद्दल / About Us</h1>
+        <p>
+          Empowering the finest Jamun growers of Maharashtra, bringing fresh organic, premium grade Jamun and value-added products directly to you with absolute authenticity.
+        </p>
+      </div>
+
+      <div class="about-grid">
+        <!-- Card 1 -->
+        <article class="glass-card">
+          <h3>🌱 Our Vision / आमचे ध्येय</h3>
+          <p>
+            Jambhulsangh was created to bring transparency, direct market access, and cutting-edge logistics support to local Jamun (Black Plum) farmers. We verify, digitize, and list every member to eliminate middle-agents and secure premium prices for growers.
+          </p>
+          <ul class="highlight-list">
+            <li>Direct Farmer-to-Consumer network</li>
+            <li>100% Genuine Devnagari Records</li>
+            <li>Quality Checked Organic Harvests</li>
+          </ul>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="glass-card">
+          <h3>🍇 Premium Jamun Varieties</h3>
+          <p>
+            From the rich soil of our verified farms, our growers cultivate high-quality varieties of Jamun (Konkan Bahadoli, Goma Priyanka, and local selections) that are loaded with natural antioxidants, low glycemic index benefits, and rich flavor profiles.
+          </p>
+          <ul class="highlight-list">
+            <li>Strictly Handpicked Harvesting</li>
+            <li>Perfect grading and packing</li>
+            <li>Ideal for health and diabetic diets</li>
+          </ul>
+        </article>
+      </div>
+
+      <div style="text-align: center; margin-top: 3.5rem;">
+        <a href="index.html" class="back-home-btn">
+          ← Back to Network Directory / मुख्यपृष्ठ
+        </a>
+      </div>
+    </main>
+
+    <!-- Theme toggler logic -->
+    <script>
+      const themeToggleBtn = document.getElementById("themeToggleBtn");
+      
+      // Load current theme
+      const savedTheme = localStorage.getItem("theme") || "light";
+      document.documentElement.setAttribute("data-theme", savedTheme);
+      updateButtonText(savedTheme);
+
+      themeToggleBtn.addEventListener("click", () => {
+        const currentTheme = document.documentElement.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateButtonText(newTheme);
+      });
+
+      function updateButtonText(theme) {
+        themeToggleBtn.textContent = theme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
+      }
+    </script>
+  </body>
+</html>

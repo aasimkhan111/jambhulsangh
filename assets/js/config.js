@@ -6,6 +6,15 @@
       range: "'Form responses 1'!A:Z",
       refreshIntervalMs: 15000,
     },
+    supabase: {
+      url: "https://nctgxnqmwhcjvswrqtaj.supabase.co",
+      anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5jdGd4bnFtd2hjanZzd3JxdGFqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg5NDU2NzAsImV4cCI6MjA5NDUyMTY3MH0.4Thjr_pd6UAZaGVHk9r0W2e6Lj7whVNYKFeac55_ktk",
+      tableName: "farmers"
+    },
+    admin: {
+      pin: "1234",
+      galleryTable: "gallery"
+    },
     ui: {
       mobileBatchSize: 8,
       desktopPageSize: 10,
