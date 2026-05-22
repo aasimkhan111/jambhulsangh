@@ -1,5 +1,63 @@
 (function () {
   var config = window.KF_CONFIG;
+  var PAYMENT_MODE = "upi"; // Toggle between "upi" and "razorpay"
+  var compressedScreenshotBase64 = "";
+
+  function handleScreenshotSelect(e) {
+    var file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.match("image.*")) {
+      showToast("कृपया फक्त इमेज फाईल (JPG, PNG) अपलोड करा.", "error");
+      e.target.value = "";
+      return;
+    }
+
+    var reader = new FileReader();
+    reader.onload = function (event) {
+      var img = new Image();
+      img.onload = function () {
+        var maxWidth = 600;
+        var width = img.width;
+        var height = img.height;
+
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+
+        var canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Compress screenshot to high-efficiency base64 JPEG
+        compressedScreenshotBase64 = canvas.toDataURL("image/jpeg", 0.65);
+
+        var previewImg = document.getElementById("uploadPreviewImage");
+        var previewContainer = document.getElementById("uploadPreviewContainer");
+        var placeholder = document.getElementById("uploadPlaceholder");
+        var fileNameEl = document.getElementById("uploadFileName");
+
+        if (previewImg && previewContainer && placeholder && fileNameEl) {
+          previewImg.src = compressedScreenshotBase64;
+          fileNameEl.textContent = file.name;
+          placeholder.classList.add("hidden");
+          previewContainer.classList.remove("hidden");
+        }
+
+        var uploadWrapper = document.querySelector(".screenshot-upload-wrapper");
+        if (uploadWrapper) {
+          uploadWrapper.style.borderColor = "";
+        }
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
   var desktopMedia = window.matchMedia("(min-width: 1024px)");
   var currencyFormatter = new Intl.NumberFormat("en-IN", {
     style: "currency",
@@ -15,13 +73,13 @@
     hour: "numeric",
     minute: "2-digit",
   });
-  var photoSlides = Array.from({ length: 14 }, function (_, index) {
-    return {
-      src: String(index + 1) + ".jpeg",
-      alt: "Community photo " + (index + 1),
-      caption: "Photo " + (index + 1) + " of 14",
-    };
-  });
+  var photoSlides = [
+    {
+      src: "committee.png?v=4",
+      alt: "जांभूळ बागाईतदार संघ महाराष्ट्र राज्य - राज्य कार्यकारिणी",
+      caption: "State Executive Committee / राज्य कार्यकारिणी",
+    }
+  ];
 
   var semanticAliases = {
     id: ["id", "uid", "slug", "code"],
@@ -179,7 +237,10 @@
       "saletype": "Sale Type",
       "variety": "Variety",
       "created_at": "Registration Date",
-      "id": "ID"
+      "id": "ID",
+      "All": "All",
+      "Showing": "Showing",
+      "listings loaded.": "listings loaded."
     },
     mr: {
       brandName: "जांभूळसंघ",
@@ -223,6 +284,9 @@
       searchLabel: "शोधा",
       noResultsTitle: "काहीही सापडले नाही",
       noResultsDesc: "कृपया तुमचा शोध शब्द किंवा फिल्टर बदलून पहा.",
+      "All": "सर्व",
+      "Showing": "दर्शवत आहे",
+      "listings loaded.": "याद्या लोड केल्या.",
       "No category data available yet.": "अद्याप कोणतीही श्रेणीची आकडेवारी उपलब्ध नाही.",
       // Column translations
       "Title": "शीर्षक",
@@ -608,6 +672,29 @@
       refs.regSubmitBtn.addEventListener("click", handleRegistrationSubmit);
     }
 
+    // UPI Screenshot Upload and Copy Listeners
+    var regScreenshot = document.getElementById("regScreenshot");
+    if (regScreenshot) {
+      regScreenshot.addEventListener("change", handleScreenshotSelect);
+    }
+
+    var copyBtn = document.getElementById("copyUpiIdBtn");
+    if (copyBtn) {
+      copyBtn.addEventListener("click", function() {
+        var upiId = document.getElementById("upiIdValue").textContent;
+        navigator.clipboard.writeText(upiId).then(function() {
+          showToast("UPI ID Copied! / UPI ID कॉपी झाला!", "info");
+          var originalText = copyBtn.innerHTML;
+          copyBtn.innerHTML = "<span>Copied!</span>";
+          setTimeout(function() {
+            copyBtn.innerHTML = originalText;
+          }, 1500);
+        }).catch(function(err) {
+          console.error("Could not copy text: ", err);
+        });
+      });
+    }
+
     // Gallery CTA events
     var viewAllBtn = document.getElementById("viewAllMembersBtn");
     if (viewAllBtn) {
@@ -645,13 +732,17 @@
 
     refs.photoSliderTrack.innerHTML = photoSlides
       .map(function (slide, index) {
+        var isCommittee = slide.src.indexOf("committee.png") !== -1;
+        var figureStyle = isCommittee ? 'style="background-color: #ffffff;"' : "";
+        var imgStyle = isCommittee ? 'style="object-fit: contain;"' : "";
         return (
-          '<figure class="photo-slide">' +
+          '<figure class="photo-slide" ' + figureStyle + '>' +
           '<img src="' +
           escapeAttribute(slide.src) +
           '" alt="' +
           escapeAttribute(slide.alt) +
-          '" loading="' +
+          '" ' + imgStyle +
+          ' loading="' +
           (index === 0 ? "eager" : "lazy") +
           '">' +
           "</figure>"
@@ -674,6 +765,10 @@
 
     if (state.slider.timer) {
       window.clearInterval(state.slider.timer);
+    }
+
+    if (photoSlides.length <= 1) {
+      return;
     }
 
     state.slider.timer = window.setInterval(function () {
@@ -849,6 +944,35 @@
   function closeRegistrationModal() {
     refs.registrationModalBackdrop.classList.remove("is-open");
     document.body.style.overflow = "";
+    resetRegistrationForm();
+  }
+
+  function resetRegistrationForm() {
+    refs.regFormInputs.forEach(function(input) {
+      if (input.id === "regState") {
+        input.value = "Maharashtra";
+      } else {
+        input.value = "";
+      }
+      var fieldEl = input.closest(".field");
+      if (fieldEl) fieldEl.style.borderColor = "";
+    });
+
+    var regScreenshot = document.getElementById("regScreenshot");
+    if (regScreenshot) regScreenshot.value = "";
+    compressedScreenshotBase64 = "";
+
+    var previewImg = document.getElementById("uploadPreviewImage");
+    var previewContainer = document.getElementById("uploadPreviewContainer");
+    var placeholder = document.getElementById("uploadPlaceholder");
+    if (previewImg && previewContainer && placeholder) {
+      previewImg.src = "";
+      placeholder.classList.remove("hidden");
+      previewContainer.classList.add("hidden");
+    }
+    
+    var uploadWrapper = document.querySelector(".screenshot-upload-wrapper");
+    if (uploadWrapper) uploadWrapper.style.borderColor = "";
   }
 
   function setRegistrationStep(step) {
@@ -884,10 +1008,25 @@
       refs.regPrevBtn.classList.remove("hidden");
       refs.regSubmitBtn.classList.remove("hidden");
       refs.regStepTitle.textContent = "Step 2 of 2";
+
+      // Toggle container visibility based on PAYMENT_MODE
+      var upiContainer = document.getElementById("upiPaymentContainer");
+      var razorpayContainer = document.getElementById("razorpayPaymentContainer");
+      if (PAYMENT_MODE === "upi") {
+        if (upiContainer) upiContainer.classList.remove("hidden");
+        if (razorpayContainer) razorpayContainer.classList.add("hidden");
+        refs.regSubmitBtn.textContent = "नोंदणी सबमिट करा / Submit Registration";
+        refs.regSubmitBtn.style.background = "linear-gradient(135deg, #5c1d7e, #8b3ab3)";
+      } else {
+        if (upiContainer) upiContainer.classList.add("hidden");
+        if (razorpayContainer) razorpayContainer.classList.remove("hidden");
+        refs.regSubmitBtn.textContent = "Pay & Submit Registration";
+        refs.regSubmitBtn.style.background = "linear-gradient(135deg, #004d2c, #108b64)";
+      }
     }
   }
 
-  function handleRegistrationSubmit() {
+  async function handleRegistrationSubmit() {
     var formData = {};
     formData["पूर्ण नाव"] = document.getElementById("regName").value.trim();
     formData["गावाचे नाव"] = document.getElementById("regVillage").value.trim();
@@ -906,36 +1045,128 @@
     formData["जांभूळ विक्री / जांभूळ थिकण"] = document.getElementById("regSaleType").value.trim();
     formData["जांभूळ जात / वाण"] = document.getElementById("regVariety").value.trim();
 
-    var options = {
-      "key": "rzp_test_SqlInZX77UVWUo",
-      "amount": "10000", // Amount in paise (10000 = 100 INR)
-      "currency": "INR",
-      "name": "Jambhulsangh",
-      "description": "Farmer Registration Fee",
-      "image": "logo2.png",
-      "handler": function (response) {
-        // This code runs ONLY if payment is successful
-        formData.timestamp = new Date().toISOString();
-        
-        showToast("Payment Successful! Saving your details...", "info");
-        
-        // Send to Backend (Supabase)
-        submitToSupabase(formData);
-      },
-      "prefill": {
-        "name": formData["पूर्ण नाव"] || "",
-        "contact": formData["मोबाईल क्रमांक (१)"] || ""
-      },
-      "theme": {
-        "color": "#004d2c"
+    if (PAYMENT_MODE === "upi") {
+      if (!compressedScreenshotBase64) {
+        showToast("कृपया पेमेंट स्क्रीनशॉट अपलोड करा.", "error");
+        var uploadWrapper = document.querySelector(".screenshot-upload-wrapper");
+        if (uploadWrapper) uploadWrapper.style.borderColor = "#ef4444";
+        return;
+      } else {
+        var uploadWrapper = document.querySelector(".screenshot-upload-wrapper");
+        if (uploadWrapper) uploadWrapper.style.borderColor = "";
       }
-    };
 
-    var rzp = new Razorpay(options);
-    rzp.on('payment.failed', function (response){
-      showToast("Payment Failed: " + response.error.description, "error");
-    });
-    rzp.open();
+      // Serialize screenshot inside Address (पत्ता) column
+      formData["पत्ता"] = formData["पत्ता"] + " | Screenshot: " + compressedScreenshotBase64;
+      formData.timestamp = new Date().toISOString();
+
+      showToast("नोंदणी जतन केली जात आहे...", "info");
+      await submitToSupabase(formData);
+      return;
+    }
+
+    if (typeof Razorpay === "undefined") {
+      showToast("Razorpay script could not be loaded. Please check your internet connection or disable ad-blockers and try again.", "error");
+      return;
+    }
+
+    showToast("Initializing payment...", "info");
+
+    try {
+      // 1. Fetch Razorpay config to get keyId
+      var configResponse = await fetch("/api/config");
+      if (!configResponse.ok) {
+        throw new Error("Failed to load payment configuration.");
+      }
+      var configData = await configResponse.json();
+      var keyId = configData.keyId;
+
+      if (!keyId) {
+        throw new Error("Razorpay Key ID is not configured on the server.");
+      }
+
+      // 2. Create Order on backend (10000 paise = 100 INR)
+      var orderResponse = await fetch("/api/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: 10000 })
+      });
+
+      if (!orderResponse.ok) {
+        var errData = await orderResponse.json();
+        throw new Error(errData.error || "Failed to create order on the server.");
+      }
+
+      var orderData = await orderResponse.json();
+      var orderId = orderData.order_id;
+
+      // 3. Configure Razorpay Standard Checkout Options
+      var options = {
+        "key": keyId,
+        "amount": orderData.amount,
+        "currency": orderData.currency,
+        "name": "Jambhulsangh",
+        "description": "Farmer Registration Fee",
+        "image": window.location.origin + "/logo2.png",
+        "order_id": orderId,
+        "handler": async function (response) {
+          showToast("Verifying payment...", "info");
+
+          try {
+            // 4. Send payment parameters to verify endpoint
+            var verifyResponse = await fetch("/api/verify-payment", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                order_id: response.razorpay_order_id,
+                payment_id: response.razorpay_payment_id,
+                signature: response.razorpay_signature
+              })
+            });
+
+            if (!verifyResponse.ok) {
+              var verifyErr = await verifyResponse.json();
+              throw new Error(verifyErr.error || "Payment signature verification failed.");
+            }
+
+            var verifyData = await verifyResponse.json();
+
+            if (verifyData.success) {
+              formData.timestamp = new Date().toISOString();
+              showToast("Payment Verified! Saving your details...", "info");
+              await submitToSupabase(formData);
+            } else {
+              throw new Error("Payment verification failed.");
+            }
+          } catch (verifyErr) {
+            console.error(verifyErr);
+            showToast("Payment Verification Error: " + verifyErr.message, "error");
+          }
+        },
+        "modal": {
+          "ondismiss": function () {
+            showToast("Payment cancelled by user.", "warning");
+          }
+        },
+        "prefill": {
+          "name": formData["पूर्ण नाव"] || "",
+          "contact": formData["मोबाईल क्रमांक (१)"] || ""
+        },
+        "theme": {
+          "color": "#004d2c"
+        }
+      };
+
+      var rzp = new Razorpay(options);
+      rzp.on('payment.failed', function (response){
+        showToast("Payment Failed: " + response.error.description, "error");
+      });
+      rzp.open();
+
+    } catch (err) {
+      console.error(err);
+      showToast("Payment Initialization Failed: " + err.message, "error");
+    }
   }
 
   async function submitToSupabase(data) {
@@ -1438,29 +1669,79 @@
     return "text";
   }
 
+  function isExcludedFilterColumn(column) {
+    if (!column) return true;
+    var key = column.key;
+    var label = column.label ? column.label.trim() : "";
+    var semantic = column.semantic;
+    
+    // ID filter
+    if (key === "id" || key === "sr_no" || semantic === "id" || label.toLowerCase() === "id" || label === "Sr. No." || label === "अनुक्रम क्रमांक" || label === "अ.क्र.") {
+      return true;
+    }
+    // Date filter
+    if (key === "date" || semantic === "date" || key === "created_at" || key === "timestamp" || column.type === "date" || label.indexOf("तारीख") !== -1 || label.toLowerCase().indexOf("date") !== -1) {
+      return true;
+    }
+    // Name / पूर्ण नाव
+    if (semantic === "title" || key === "name" || label === "पूर्ण नाव" || label === "नाव" || key === "पूर्ण_नाव" || key === "पूर्ण नाव") {
+      return true;
+    }
+    // Phone numbers (Phone 1 and Phone 2)
+    if (semantic === "phone" || key === "phone1" || key === "phone2" || key.indexOf("phone") !== -1 || key.indexOf("mobile") !== -1 ||
+        label === "मोबाईल क्रमांक (१)" || label === "मोबाईल क्रमांक (२)" || label.indexOf("मोबाईल") !== -1 || label.indexOf("क्रमांक") !== -1 ||
+        key === "मोबाईल_क्रमांक_१" || key === "मोबाईल_क्रमांक_२" || key.indexOf("मोबाईल") !== -1) {
+      return true;
+    }
+    // Image and Summary / Address
+    if (semantic === "image" || semantic === "summary" || key === "image" || key === "summary" || label === "पत्ता" || label === "Address") {
+      return true;
+    }
+    return false;
+  }
+
   function buildFilterOptions(rows) {
-    return {
-      categories: uniqueSortedValues(
-        rows.map(function (row) {
-          return row.category;
-        })
-      ),
-      statuses: uniqueSortedValues(
-        rows.map(function (row) {
-          return row.status;
-        })
-      ),
-    };
+    var options = {};
+    if (state.columns) {
+      state.columns.forEach(function (column) {
+        if (isExcludedFilterColumn(column) || column.semantic === "price") {
+          return;
+        }
+        var values = rows.map(function (row) {
+          if (column.semantic === "category") {
+            return row.category;
+          }
+          if (column.semantic === "status") {
+            return row.status;
+          }
+          return row.raw[column.key];
+        });
+        options[column.key] = uniqueSortedValues(values);
+      });
+    }
+    return options;
   }
 
   function sanitizeActiveFilters() {
-    if (state.filterOptions.categories.indexOf(state.filters.category) === -1) {
-      state.filters.category = "all";
+    if (!state.columns) {
+      return;
     }
+    state.columns.forEach(function (column) {
+      if (isExcludedFilterColumn(column) || column.semantic === "price") {
+        return;
+      }
+      
+      // Initialize if not present
+      if (!(column.key in state.filters)) {
+        state.filters[column.key] = "all";
+      }
 
-    if (state.filterOptions.statuses.indexOf(state.filters.status) === -1) {
-      state.filters.status = "all";
-    }
+      // Sanitize selection
+      var opts = state.filterOptions[column.key] || [];
+      if (state.filters[column.key] !== "all" && opts.indexOf(state.filters[column.key]) === -1) {
+        state.filters[column.key] = "all";
+      }
+    });
   }
 
   function getProcessedRows() {
@@ -1474,16 +1755,27 @@
           return false;
         }
 
-        if (state.filters.category !== "all" && row.category !== state.filters.category) {
-          return false;
-        }
-
-        if (state.filters.status !== "all" && row.status !== state.filters.status) {
-          return false;
-        }
-
-        if (state.filters.date !== "all" && !matchesDateWindow(row.dateValue, state.filters.date)) {
-          return false;
+        if (state.columns) {
+          for (var i = 0; i < state.columns.length; i++) {
+            var col = state.columns[i];
+            if (isExcludedFilterColumn(col) || col.semantic === "price") {
+              continue;
+            }
+            var filterVal = state.filters[col.key];
+            if (filterVal && filterVal !== "all") {
+              var rowVal = "";
+              if (col.semantic === "category") {
+                rowVal = row.category;
+              } else if (col.semantic === "status") {
+                rowVal = row.status;
+              } else {
+                rowVal = row.raw[col.key] || "";
+              }
+              if (rowVal !== filterVal) {
+                return false;
+              }
+            }
+          }
         }
 
         if (minPrice !== null && (row.priceValue === null || row.priceValue < minPrice)) {
@@ -1750,51 +2042,56 @@
   }
 
   function filterMarkup() {
-    return (
-      '<div class="filter-stack">' +
-      fieldMarkup(
-        t("categoryLabel"),
-        '<select class="control" data-filter-key="category">' +
-          optionMarkup("all", t("allCategories"), state.filters.category) +
-          state.filterOptions.categories
+    if (!state.columns || state.columns.length === 0) {
+      return '<div class="filter-stack" style="padding: 2rem; text-align: center; color: var(--text-muted);">' +
+             '<div class="skeleton-stat" style="height: 48px; border-radius: 16px; margin-bottom: 1rem;"></div>' +
+             '<div class="skeleton-stat" style="height: 48px; border-radius: 16px; margin-bottom: 1rem;"></div>' +
+             '<div class="skeleton-stat" style="height: 48px; border-radius: 16px;"></div>' +
+             '</div>';
+    }
+
+    var markup = '<div class="filter-stack">';
+
+    state.columns.forEach(function (column) {
+      if (isExcludedFilterColumn(column)) {
+        return;
+      }
+
+      if (column.semantic === "price") {
+        markup +=
+          '<div class="field"><span>' + escapeHtml(t(column.label)) + '</span><div class="range-row">' +
+          '<input class="control" data-filter-key="minPrice" type="number" inputmode="numeric" placeholder="' + t("Min") + '" value="' +
+          escapeAttribute(state.filters.minPrice) +
+          '">' +
+          '<input class="control" data-filter-key="maxPrice" type="number" inputmode="numeric" placeholder="' + t("Max") + '" value="' +
+          escapeAttribute(state.filters.maxPrice) +
+          '">' +
+          "</div></div>";
+      } else {
+        var currentVal = state.filters[column.key] || "all";
+        var opts = state.filterOptions[column.key] || [];
+
+        var labelText = escapeHtml(t(column.label));
+        var allLabelText = t("All") + " " + labelText;
+
+        var optionsHtml = optionMarkup("all", allLabelText, currentVal) +
+          opts
             .map(function (item) {
-              return optionMarkup(item, t(item), state.filters.category);
+              return optionMarkup(item, t(item), currentVal);
             })
-            .join("") +
-          "</select>"
-      ) +
-      fieldMarkup(
-        t("statusLabel"),
-        '<select class="control" data-filter-key="status">' +
-          optionMarkup("all", t("allStatuses"), state.filters.status) +
-          state.filterOptions.statuses
-            .map(function (item) {
-              return optionMarkup(item, t(item), state.filters.status);
-            })
-            .join("") +
-          "</select>"
-      ) +
-      fieldMarkup(
-        t("dateLabel"),
-        '<select class="control" data-filter-key="date">' +
-          optionMarkup("all", t("anyTime"), state.filters.date) +
-          optionMarkup("7", t("last7Days"), state.filters.date) +
-          optionMarkup("30", t("last30Days"), state.filters.date) +
-          optionMarkup("90", t("last90Days"), state.filters.date) +
-          optionMarkup("365", t("lastYear"), state.filters.date) +
-          "</select>"
-      ) +
-      '<div class="field"><span>' + t("priceRangeLabel") + '</span><div class="range-row">' +
-      '<input class="control" data-filter-key="minPrice" type="number" inputmode="numeric" placeholder="' + t("Min") + '" value="' +
-      escapeAttribute(state.filters.minPrice) +
-      '">' +
-      '<input class="control" data-filter-key="maxPrice" type="number" inputmode="numeric" placeholder="' + t("Max") + '" value="' +
-      escapeAttribute(state.filters.maxPrice) +
-      '">' +
-      "</div></div>" +
-      '<div class="filter-note">' + t("filterNote") + '</div>' +
-      "</div>"
-    );
+            .join("");
+
+        markup += fieldMarkup(
+          labelText,
+          '<select class="control" data-filter-key="' + escapeAttribute(column.key) + '">' +
+            optionsHtml +
+            "</select>"
+        );
+      }
+    });
+
+    markup += '<div class="filter-note">' + t("filterNote") + '</div>' + '</div>';
+    return markup;
   }
 
   function renderToolbarState() {
@@ -2144,10 +2441,12 @@
       '<div class="card-accent-strip" style="position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: ' +
       accentGradient +
       ';"></div>' +
-      // Floating interactive chevron arrow
-      '<div class="card-chevron" style="position: absolute; right: 1.4rem; top: 1.35rem; color: var(--text-soft); font-size: 1.5rem; line-height: 1; transition: transform 320ms cubic-bezier(0.25, 1, 0.5, 1), color 320ms ease;">&rsaquo;</div>' +
+      // Floating interactive Details badge button
+      '<span class="more-details-btn" style="position: absolute; right: 1rem; top: 1.35rem; font-family: \'Poppins\', sans-serif; font-weight: 700; font-size: 0.74rem; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 0.32rem 0.68rem; border-radius: 999px; border: 2px solid #000000; box-shadow: 0 3px 0 #000000; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; white-space: nowrap;" onmouseover="this.style.transform=\'translateY(-1px)\'; this.style.boxShadow=\'0 4px 0 #000000\';" onmouseout="this.style.transform=\'none\'; this.style.boxShadow=\'0 3px 0 #000000\';">' +
+      (state.language === "en" ? "More Details" : "तपशील / Details") +
+      '</span>' +
       
-      '<div class="card-body" style="display: flex; flex-direction: column; gap: 0.5rem; padding-bottom: 0.2rem; padding-right: 1.5rem;">' +
+      '<div class="card-body" style="display: flex; flex-direction: column; gap: 0.4rem; padding-bottom: 0.2rem; padding-right: 7.5rem;">' +
       '<h3 style="margin: 0; font-family: \'Poppins\', sans-serif; font-size: 1.15rem; letter-spacing: -0.02em; color: var(--text); line-height: 1.35; font-weight: 600;">' +
       (row.raw && row.raw['sr_no'] ? '<span style="color: var(--primary); font-weight: 700; margin-right: 0.35rem;">#' + escapeHtml(row.raw['sr_no']) + '</span> ' : '') +
       escapeHtml(row.title) +
@@ -2156,6 +2455,11 @@
       '<span class="location-pin" style="display: inline-block; font-size: 1.05rem; transition: transform 0.2s ease;">📍</span>' +
       '<span style="font-weight: 500;">' + escapeHtml(locationText) + '</span>' +
       '</div>' +
+      (row.category ? 
+        '<div class="card-category" style="display: flex; align-items: center; gap: 0.45rem; color: var(--accent); font-size: 0.88rem; font-weight: 600; margin-top: 0.1rem;">' +
+        '<span class="category-icon" style="display: inline-block; font-size: 1.05rem;">🍇</span>' +
+        '<span>' + (state.language === "en" ? "Variety: " : "जात/वाण: ") + escapeHtml(row.category) + '</span>' +
+        '</div>' : '') +
       '</div>' +
       
       '<div class="card-actions" style="margin-top: 1.1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">' +
@@ -2220,7 +2524,22 @@
       return row.dateLabel;
     }
 
-    return row.raw[column.key] || "";
+    var val = row.raw[column.key] || "";
+    var key = String(column.key || "").trim();
+    var lbl = String(column.label || "").trim();
+    if (key === "पत्ता" || key === "address" || lbl === "पत्ता" || lbl === "Address") {
+      var valStr = String(val || "");
+      if (valStr.indexOf(" | Screenshot: ") !== -1) {
+        var parts = valStr.split(" | Screenshot: ");
+        var remaining = parts[0];
+        if (remaining.indexOf(" | UTR: ") !== -1) {
+          return remaining.split(" | UTR: ")[0];
+        }
+        return remaining;
+      }
+    }
+
+    return val;
   }
 
   function buildCardMeta(row) {
@@ -2346,12 +2665,17 @@
 
   function resetFilters() {
     state.filters = {
-      category: "all",
-      status: "all",
-      date: "all",
       minPrice: "",
       maxPrice: "",
     };
+    if (state.columns) {
+      state.columns.forEach(function (column) {
+        if (isExcludedFilterColumn(column) || column.semantic === "price") {
+          return;
+        }
+        state.filters[column.key] = "all";
+      });
+    }
     state.searchTerm = "";
     refs.searchInput.value = "";
     resetListingViewport();
@@ -2366,16 +2690,15 @@
   function countActiveFilters() {
     var count = 0;
 
-    if (state.filters.category !== "all") {
-      count += 1;
-    }
-
-    if (state.filters.status !== "all") {
-      count += 1;
-    }
-
-    if (state.filters.date !== "all") {
-      count += 1;
+    if (state.columns) {
+      state.columns.forEach(function (column) {
+        if (isExcludedFilterColumn(column) || column.semantic === "price") {
+          return;
+        }
+        if (state.filters[column.key] && state.filters[column.key] !== "all") {
+          count += 1;
+        }
+      });
     }
 
     if (state.filters.minPrice) {

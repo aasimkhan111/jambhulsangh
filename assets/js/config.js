@@ -12,7 +12,7 @@
       tableName: "farmers"
     },
     admin: {
-      pin: "1234",
+      pin: "1502",
       galleryTable: "gallery"
     },
     ui: {

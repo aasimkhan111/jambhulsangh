@@ -159,9 +159,76 @@ img {
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  padding: 0.85rem 1rem;
+  padding: 0.85rem 1.25rem;
   border-radius: var(--radius-xl);
   transform: translateX(-50%);
+  
+  /* Luxurious Jamun purple gradient with glassmorphism */
+  background: linear-gradient(135deg, rgba(92, 19, 99, 0.96), rgba(53, 7, 58, 0.98)) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  
+  /* Premium Champagne Gold Border and Shadow Lift */
+  border: 1.5px solid #d1a153 !important;
+  box-shadow: 
+    0 12px 32px rgba(30, 17, 36, 0.28),
+    inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Ensure navbar brand text and logo have perfect contrast */
+.floating-nav .brand-copy strong {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.floating-nav .brand-copy small {
+  color: #d1a153 !important; /* Premium Gold for grower subtitle */
+  font-weight: 500;
+}
+
+/* Nav Links contrast adjustments */
+.floating-nav .nav-links a {
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-weight: 600;
+  transition: color var(--transition), transform var(--transition);
+}
+
+.floating-nav .nav-links a:hover {
+  color: #d1a153 !important; /* Highlights links in Gold on hover */
+  transform: translateY(-1px);
+}
+
+/* Sync indicator and secondary buttons inside the deep purple nav */
+.floating-nav .status-pill {
+  color: #d1a153 !important;
+  background: rgba(209, 161, 83, 0.12) !important;
+  border-color: rgba(209, 161, 83, 0.25) !important;
+}
+
+.floating-nav .status-pill.is-live {
+  color: #22c55e !important;
+  background: rgba(34, 197, 94, 0.15) !important;
+  border-color: rgba(34, 197, 94, 0.3) !important;
+}
+
+.floating-nav .button-secondary {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  transition: all 0.2s ease !important;
+}
+
+.floating-nav .button-secondary:hover {
+  background: rgba(255, 255, 255, 0.16) !important;
+  border-color: #d1a153 !important;
+  transform: translateY(-1px);
+}
+
+/* Ensure mobile menu hamburger works cleanly */
+.floating-nav #mobileMenuButton {
+  background: linear-gradient(135deg, #d1a153, #b4853b) !important;
+  color: #1e1124 !important;
+  font-weight: 700;
 }
 
 .brand-lockup {
@@ -1627,7 +1694,8 @@ img {
   /* Hide the desktop action buttons in floating-nav on small mobile screens to keep it ultra clean, and show menu button */
   #refreshButton,
   #themeToggle,
-  #langToggle {
+  #langToggle,
+  #navAdminButton {
     display: none !important;
   }
 
@@ -1699,76 +1767,450 @@ img {
   margin-top: 1.5rem;
 }
 
-/* ── Admin Panel Styles ── */
-.pin-dot {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 2px solid #c4b5fd;
+/* ── Admin Panel Styles (Premium Royal Jamun & Gold Overhaul) ── */
+#adminLoginBackdrop,
+#adminPanelBackdrop {
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  background: rgba(13, 6, 20, 0.82) !important;
+  transition: opacity 0.3s ease !important;
+}
+
+/* Base dialog containers */
+.admin-dialog {
+  background: linear-gradient(145deg, #1d0e2c, #0e0417) !important;
+  border: 1.5px solid rgba(209, 161, 83, 0.35) !important;
+  border-radius: 28px !important;
+  box-shadow: 
+    0 25px 60px -15px rgba(0, 0, 0, 0.9),
+    0 0 40px rgba(139, 92, 246, 0.15),
+    inset 0 1px 2px rgba(255, 255, 255, 0.08) !important;
+  color: #f3e8ff !important;
+  overflow: hidden;
+  box-sizing: border-box !important;
+}
+
+.admin-login-dialog {
+  width: 100%;
+  max-width: 380px;
+}
+
+.admin-panel-dialog {
+  width: 100%;
+  max-width: 620px;
+  border-color: #d1a153 !important; /* Bold Imperial Gold Border */
+}
+
+/* Modal slide/elastic bounce animations */
+.modal-backdrop .admin-dialog {
+  opacity: 0;
+  transform: scale(0.92) translateY(20px) !important;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64) !important;
+}
+
+.modal-backdrop.is-open .admin-dialog {
+  opacity: 1;
+  transform: scale(1) translateY(0) !important;
+}
+
+/* Custom Scrollbar Styles for the dashboard */
+.admin-dialog * {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(209, 161, 83, 0.25) transparent;
+}
+
+.admin-dialog *::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.admin-dialog *::-webkit-scrollbar-track {
   background: transparent;
-  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.admin-dialog *::-webkit-scrollbar-thumb {
+  background: rgba(209, 161, 83, 0.25);
+  border-radius: 99px;
+}
+
+.admin-dialog *::-webkit-scrollbar-thumb:hover {
+  background: rgba(209, 161, 83, 0.45);
+}
+
+/* Dialog Header styling */
+.admin-dialog .sheet-header {
+  border-bottom: 1px solid rgba(209, 161, 83, 0.2) !important;
+  padding: 1.25rem 1.5rem !important;
+  background: rgba(0, 0, 0, 0.2) !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.admin-dialog .sheet-header h2 {
+  color: #fff !important;
+  font-weight: 800 !important;
+  font-size: 1.2rem !important;
+  letter-spacing: 0.5px !important;
+  margin: 0 !important;
+  text-shadow: 0 0 10px rgba(209, 161, 83, 0.25);
+  font-family: 'Poppins', system-ui, sans-serif !important;
+}
+
+/* Compact Close Buttons */
+#adminLoginClose,
+#adminPanelClose {
+  background: rgba(255, 255, 255, 0.04) !important;
+  color: #cbd5e1 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
+  padding: 0.45rem 0.9rem !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+#adminLoginClose:hover,
+#adminPanelClose:hover {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #ef4444 !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+  transform: scale(1.04);
+}
+
+/* PIN login dot indicators */
+.pin-dot {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: 2px solid rgba(209, 161, 83, 0.35);
+  background: transparent;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .pin-dot.filled {
-  background: #7c3aed;
-  border-color: #7c3aed;
-  transform: scale(1.15);
+  background: #d1a153;
+  border-color: #d1a153;
+  transform: scale(1.25);
+  box-shadow: 
+    0 0 14px rgba(209, 161, 83, 0.65), 
+    0 0 4px rgba(209, 161, 83, 0.4);
 }
 
+/* PIN keys dynamic keypad layout */
 .pin-key {
-  padding: 0.9rem;
-  font-size: 1.3rem;
-  font-weight: 600;
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  background: var(--surface);
-  color: var(--text);
+  padding: 0.95rem 0;
+  font-size: 1.4rem;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  color: #e2e8f0;
   cursor: pointer;
-  transition: background 0.15s ease, transform 0.1s ease;
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
+  backdrop-filter: blur(12px);
+  box-shadow: 
+    inset 0 1px 1px rgba(255, 255, 255, 0.05),
+    0 4px 6px rgba(0, 0, 0, 0.2);
   -webkit-tap-highlight-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pin-key:hover {
+  background: rgba(209, 161, 83, 0.15);
+  border-color: rgba(209, 161, 83, 0.35);
+  color: #fff;
+  box-shadow: 0 0 15px rgba(209, 161, 83, 0.15);
+  transform: translateY(-2px);
 }
 
 .pin-key:active {
-  transform: scale(0.92);
-  background: var(--border);
+  transform: scale(0.92) translateY(0);
+  background: rgba(209, 161, 83, 0.25);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.pin-key[data-pin="clear"] {
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.04);
+  border-color: rgba(239, 68, 68, 0.12);
+}
+
+.pin-key[data-pin="clear"]:hover {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #fee2e2;
+}
+
+.pin-key[data-pin="submit"] {
+  background: linear-gradient(135deg, #7c3aed, #6d28d9) !important;
+  border-color: rgba(124, 58, 237, 0.2) !important;
+  color: #fff !important;
+  font-size: 1.15rem !important;
+}
+
+.pin-key[data-pin="submit"]:hover {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important;
+  box-shadow: 0 0 15px rgba(124, 58, 237, 0.45);
+}
+
+/* Dynamic Interactive tabs inside admin panel drawer */
+.admin-tabs-nav {
+  background: rgba(0, 0, 0, 0.18) !important;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.05) !important;
+  display: flex;
+  padding: 0 0.5rem !important;
+  gap: 4px;
 }
 
 .admin-tab {
   flex: 1;
-  padding: 0.75rem 0.5rem;
-  font-size: 0.82rem;
-  font-weight: 600;
+  padding: 0.95rem 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
   border: none;
   background: transparent;
-  color: var(--text-muted);
+  color: #94a3b8;
   cursor: pointer;
-  border-bottom: 3px solid transparent;
-  transition: all 0.2s ease;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border-radius: 8px 8px 0 0;
+  letter-spacing: 0.3px;
+}
+
+.admin-tab::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 15%;
+  right: 15%;
+  height: 3px;
+  background: #d1a153;
+  border-radius: 3px 3px 0 0;
+  opacity: 0;
+  transform: scaleX(0.7);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 0 8px #d1a153;
+}
+
+.admin-tab:hover {
+  color: #f1f5f9;
+  background: rgba(255, 255, 255, 0.02);
 }
 
 .admin-tab.active {
-  color: #7c3aed;
-  border-bottom-color: #7c3aed;
+  color: #d1a153 !important;
+  background: rgba(209, 161, 83, 0.06);
 }
 
+.admin-tab.active::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* Premium Form Elements styling */
 .admin-input {
   width: 100%;
-  padding: 0.7rem 0.9rem;
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  font-size: 0.95rem;
-  background: var(--bg, var(--background));
-  color: var(--text);
-  transition: border-color 0.2s ease;
+  padding: 0.8rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  font-size: 0.92rem;
+  background: rgba(0, 0, 0, 0.25) !important;
+  color: #fff !important;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
   box-sizing: border-box;
 }
 
+.admin-input::placeholder {
+  color: rgba(148, 163, 184, 0.5) !important;
+}
+
 .admin-input:focus {
-  outline: none;
-  border-color: #7c3aed;
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+  outline: none !important;
+  border-color: #d1a153 !important;
+  background: rgba(0, 0, 0, 0.35) !important;
+  box-shadow: 0 0 0 3px rgba(209, 161, 83, 0.15), 0 0 10px rgba(209, 161, 83, 0.08) !important;
+}
+
+/* High-Density Search inside dashboard */
+#adminMemberSearch {
+  width: 100% !important;
+  padding: 0.8rem 1.2rem !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 14px !important;
+  font-size: 0.95rem !important;
+  background: rgba(0, 0, 0, 0.25) !important;
+  color: #fff !important;
+  transition: all 0.25s ease !important;
+  box-sizing: border-box !important;
+}
+
+#adminMemberSearch:focus {
+  outline: none !important;
+  border-color: #d1a153 !important;
+  background: rgba(0, 0, 0, 0.35) !important;
+  box-shadow: 0 0 0 3px rgba(209, 161, 83, 0.15), 0 0 10px rgba(209, 161, 83, 0.1) !important;
+}
+
+/* High-Density Card Dashboard Rows */
+#adminMembersList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem !important;
+}
+
+#adminMembersList > div {
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 16px !important;
+  padding: 0.9rem 1.15rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+#adminMembersList > div:hover {
+  background: rgba(209, 161, 83, 0.04) !important;
+  border-color: rgba(209, 161, 83, 0.28) !important;
+  transform: translateY(-2px) scale(1.005);
+  box-shadow: 
+    0 10px 20px rgba(0, 0, 0, 0.25), 
+    0 0 12px rgba(209, 161, 83, 0.05) !important;
+}
+
+#adminMembersList > div strong,
+#adminMembersList > div span {
+  color: #fff !important;
+}
+
+/* Compact Aligned Actions inside members tab */
+#adminMembersList button {
+  font-family: 'Inter', system-ui, sans-serif !important;
+  border-radius: 10px !important;
+  padding: 0.45rem 0.8rem !important;
+  font-size: 0.76rem !important;
+  font-weight: 700 !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border: none !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 4px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15) !important;
+}
+
+#adminMembersList button:hover {
+  transform: translateY(-1.5px) scale(1.04) !important;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+#adminMembersList button:active {
+  transform: translateY(0) scale(0.97) !important;
+}
+
+/* Receipt button style */
+#adminMembersList button[onclick*="viewScreenshot"] {
+  background: linear-gradient(135deg, #108b64, #14996f) !important;
+  color: #fff !important;
+}
+
+#adminMembersList button[onclick*="viewScreenshot"]:hover {
+  background: linear-gradient(135deg, #14996f, #1bb886) !important;
+  box-shadow: 0 0 12px rgba(16, 139, 100, 0.4) !important;
+}
+
+/* Edit button style */
+#adminMembersList button[onclick*="editMember"] {
+  background: linear-gradient(135deg, #7c3aed, #9061f9) !important;
+  color: #fff !important;
+}
+
+#adminMembersList button[onclick*="editMember"]:hover {
+  background: linear-gradient(135deg, #8b5cf6, #a78bfa) !important;
+  box-shadow: 0 0 12px rgba(124, 58, 237, 0.4) !important;
+}
+
+/* Delete button style */
+#adminMembersList button[onclick*="deleteMember"] {
+  background: linear-gradient(135deg, #ef4444, #f87171) !important;
+  color: #fff !important;
+}
+
+#adminMembersList button[onclick*="deleteMember"]:hover {
+  background: linear-gradient(135deg, #f87171, #fca5a5) !important;
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.4) !important;
+}
+
+/* Save / Update executive form action buttons styling */
+#adminSaveMember,
+#adminUpdateMember {
+  background: linear-gradient(135deg, #d1a153, #b5893d) !important;
+  color: #11071c !important;
+  border: none !important;
+  border-radius: 14px !important;
+  padding: 0.95rem !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  letter-spacing: 0.5px !important;
+  text-transform: uppercase !important;
+  box-shadow: 0 6px 20px rgba(209, 161, 83, 0.25) !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-top: 1rem !important;
+}
+
+#adminSaveMember:hover,
+#adminUpdateMember:hover {
+  background: linear-gradient(135deg, #e6b86a, #c29548) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(209, 161, 83, 0.4) !important;
+}
+
+#adminSaveMember:active,
+#adminUpdateMember:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 4px 10px rgba(209, 161, 83, 0.2) !important;
+}
+
+/* Gallery layout card enhancements */
+#adminGalleryGrid > div {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  background: rgba(0, 0, 0, 0.25) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+#adminGalleryGrid > div:hover {
+  transform: scale(1.05) translateY(-2px);
+  border-color: rgba(209, 161, 83, 0.35) !important;
+  box-shadow: 
+    0 12px 24px rgba(0, 0, 0, 0.3), 
+    0 0 15px rgba(209, 161, 83, 0.1) !important;
+}
+
+#adminAddPhotoForm {
+  background: rgba(0, 0, 0, 0.22) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 18px !important;
+  padding: 1.25rem !important;
 }
 
 @keyframes shake {
@@ -2136,3 +2578,148 @@ img {
     background-position: 0% 50%;
   }
 }
+
+/* ── Registration Sheet Scrollbar & Mobile Optimizations ── */
+
+/* Force scrollbar to be continuously visible and bold */
+#registrationSheet {
+  overflow-y: scroll !important; /* Continuously active scroll window */
+  scrollbar-width: auto; /* Firefox auto scrollbar */
+  scrollbar-color: var(--primary, #5c1363) #f6f0e2; /* Firefox thumb / track */
+  overscroll-behavior: contain;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; /* Butter-smooth momentum scrolling on iOS */
+}
+
+/* Webkit Scrollbars (Chrome, Safari, Edge, Opera) */
+#registrationSheet::-webkit-scrollbar {
+  width: 16px !important; /* Bold / thicker premium scrollbar */
+  height: 16px !important;
+  display: block !important; /* Lock display block persistently */
+}
+
+#registrationSheet::-webkit-scrollbar-track {
+  background: #fbf8f2 !important; /* Premium organic warm linen cream */
+  border-radius: 99px !important;
+  border: 2px solid #d1a153 !important; /* Double-framed champagne gold outline */
+  box-shadow: 
+    inset 0 0 10px rgba(92, 19, 99, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+#registrationSheet::-webkit-scrollbar-thumb {
+  background: 
+    linear-gradient(180deg, rgba(255, 255, 255, 0.25), rgba(0, 0, 0, 0.2)),
+    linear-gradient(90deg, #5c1363, #3f0945) !important; /* Rich Royal Jamun Purple with vertical lighting */
+  border: 3.5px solid #d1a153 !important; /* Bold, premium champagne gold border */
+  border-radius: 99px !important;
+  box-shadow: 
+    0 4px 8px rgba(30, 17, 36, 0.35), 
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.45) !important;
+  transition: all 0.2s ease-in-out !important;
+  cursor: grab !important;
+}
+
+#registrationSheet::-webkit-scrollbar-thumb:hover {
+  background: 
+    linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(0, 0, 0, 0.1)),
+    linear-gradient(90deg, #430a48, #2a052e) !important; /* Darker executive Jamun on hover */
+  border-color: #e5b869 !important; /* Brighter premium champagne gold on hover */
+  box-shadow: 
+    0 5px 12px rgba(30, 17, 36, 0.45), 
+    inset 0 1.5px 3px rgba(255, 255, 255, 0.6) !important;
+}
+
+#registrationSheet::-webkit-scrollbar-thumb:active {
+  cursor: grabbing !important;
+  background: #2a052e !important;
+}
+
+/* Mobile Responsiveness optimizations for the registration form */
+@media (max-width: 768px) {
+  #registrationSheet {
+    max-height: 94vh !important; /* Allow the sheet to take up slightly more space for easier scrolling */
+    padding: 0.85rem 0.85rem 1.25rem !important; /* Slightly more compact padding to maximize active input areas */
+    border-radius: 20px 20px 0 0 !important; /* Modern rounded top */
+  }
+
+  #registrationSheet .sheet-header {
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  #registrationSheet .sheet-content {
+    margin-top: 0.5rem;
+  }
+
+  #registrationSheet .filter-stack {
+    gap: 0.95rem !important; /* Tighter gap to make more fields fit without heavy scrolling */
+  }
+
+  #registrationSheet div[style*="grid-template-columns: 1fr 1fr"] {
+    gap: 0.5rem !important;
+  }
+
+  #registrationSheet .control {
+    min-height: 44px !important;
+    padding: 0.65rem 0.85rem !important;
+    font-size: 0.9rem !important;
+  }
+
+  #registrationSheet .field span {
+    font-size: 0.8rem !important;
+  }
+
+  #registrationSheet .sheet-footer {
+    padding-top: 0.75rem !important;
+    margin-top: 1rem !important;
+  }
+
+  #registrationSheet .button {
+    min-height: 44px !important;
+    padding: 0.65rem 1rem !important;
+    font-size: 0.9rem !important;
+  }
+}
+
+/* Stack dual-column fields into a single column on extra-small mobile screens for a superior touch typing flow */
+@media (max-width: 480px) {
+  #registrationSheet div[style*="grid-template-columns: 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    gap: 0.95rem !important;
+  }
+}
+
+/* Custom styling for the Join Us navbar button */
+#openRegistrationButton {
+  transition: all var(--transition) !important;
+}
+
+#openRegistrationButton:hover {
+  background: #c3f2d7 !important; /* Rich mint green hover matching WhatsApp hover highlights */
+  border-color: #a4e9c1 !important;
+  color: #00331d !important;
+  transform: translateY(-1px) scale(1.03) !important;
+  box-shadow: 0 6px 18px rgba(16, 139, 100, 0.22) !important;
+}
+
+#openRegistrationButton:active {
+  transform: scale(0.98) !important;
+}
+
+/* Direct UPI Payment App Buttons */
+.upi-app-btn {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.upi-app-btn:hover {
+  transform: translateY(-2px) scale(1.03) !important;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15), 0 0 12px rgba(139, 58, 179, 0.15) !important;
+  opacity: 0.95;
+}
+
+.upi-app-btn:active {
+  transform: translateY(0) scale(0.98) !important;
+}
+

@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Browse beautiful community and harvest photos from the verified growers of the Jambhulsangh network."
+    />
+    <title>चित्र दालन | Gallery - Jambhulsangh Growers Network</title>
+    <link rel="icon" href="logo.jpeg" type="image/jpeg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/styles/main.css?v=18" />
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        margin: 0;
+        padding: 0;
+        transition: background 0.3s ease, color 0.3s ease;
+      }
+
+      .gallery-wrapper {
+        max-width: var(--max-width);
+        margin: 8rem auto 4rem;
+        padding: 0 1.5rem;
+      }
+
+      .gallery-header {
+        text-align: center;
+        margin-bottom: 3.5rem;
+      }
+
+      .gallery-header h1 {
+        font-family: 'Poppins', sans-serif;
+        font-size: clamp(2.2rem, 5vw, 3.5rem);
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin: 0 0 1rem;
+        line-height: 1.15;
+      }
+
+      .gallery-header p {
+        font-size: clamp(1rem, 2.5vw, 1.25rem);
+        color: var(--text-soft);
+        max-width: 700px;
+        margin: 0 auto;
+        line-height: 1.6;
+      }
+
+      /* Filter Tabs */
+      .filter-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+        margin-bottom: 3rem;
+        flex-wrap: wrap;
+      }
+
+      .filter-tab {
+        background: var(--surface);
+        border: 2px solid #000000;
+        color: var(--text);
+        padding: 0.6rem 1.4rem;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        font-size: 0.95rem;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+        box-shadow: 0 4px 0 #000000;
+      }
+
+      .filter-tab:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 0 #000000;
+      }
+
+      .filter-tab.active {
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        color: white;
+        transform: translateY(1px);
+        box-shadow: 0 2px 0 #000000;
+      }
+
+      [data-theme="dark"] .filter-tab.active {
+        border-color: var(--secondary);
+      }
+
+      /* Grid Layout */
+      .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      .gallery-item {
+        background: var(--surface);
+        border: 2px solid #000000;
+        border-radius: var(--radius-xl);
+        overflow: hidden;
+        box-shadow: var(--shadow-soft);
+        cursor: pointer;
+        transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s;
+        position: relative;
+      }
+
+      .gallery-item:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 30px rgba(92, 19, 99, 0.15);
+      }
+
+      [data-theme="dark"] .gallery-item:hover {
+        box-shadow: 0 20px 30px rgba(209, 161, 83, 0.15);
+      }
+
+      .image-container {
+        position: relative;
+        aspect-ratio: 4/3;
+        overflow: hidden;
+        background: var(--background-strong);
+      }
+
+      .gallery-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+      }
+
+      .gallery-item:hover .gallery-image {
+        transform: scale(1.08);
+      }
+
+      .item-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to top, rgba(30, 17, 36, 0.85) 0%, rgba(30, 17, 36, 0) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        display: flex;
+        align-items: flex-end;
+        padding: 1.5rem;
+      }
+
+      .gallery-item:hover .item-overlay {
+        opacity: 1;
+      }
+
+      .overlay-text {
+        color: #ffffff;
+      }
+
+      .overlay-text h4 {
+        margin: 0 0 0.25rem;
+        font-family: 'Poppins', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--secondary);
+      }
+
+      .overlay-text p {
+        margin: 0;
+        font-size: 0.88rem;
+        opacity: 0.9;
+        line-height: 1.4;
+      }
+
+      .item-details {
+        padding: 1.25rem;
+        border-top: 1px solid var(--border);
+        background: var(--surface-strong);
+      }
+
+      .item-details h4 {
+        margin: 0 0 0.35rem;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: var(--text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .item-details .badge {
+        display: inline-block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.25rem 0.6rem;
+        border-radius: 50px;
+        background: var(--neutral-soft);
+        color: var(--primary);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      [data-theme="dark"] .item-details .badge {
+        color: var(--secondary);
+      }
+
+      /* Lightbox Modal */
+      .lightbox-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(19, 7, 22, 0.92);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .lightbox-modal.active {
+        display: flex;
+        opacity: 1;
+      }
+
+      .lightbox-content {
+        position: relative;
+        max-width: 90%;
+        max-height: 80vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .lightbox-image {
+        max-width: 100%;
+        max-height: 70vh;
+        object-fit: contain;
+        border-radius: 12px;
+        border: 2px solid #000000;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      }
+
+      .lightbox-caption {
+        color: #ffffff;
+        text-align: center;
+        max-width: 600px;
+      }
+
+      .lightbox-caption h3 {
+        margin: 0 0 0.35rem;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        color: var(--secondary);
+      }
+
+      .lightbox-caption p {
+        margin: 0;
+        font-size: 0.95rem;
+        color: #e2dbe5;
+        line-height: 1.5;
+      }
+
+      .lightbox-close {
+        position: absolute;
+        top: -45px;
+        right: 0;
+        color: #ffffff;
+        font-size: 2.2rem;
+        font-weight: 300;
+        cursor: pointer;
+        background: none;
+        border: none;
+        outline: none;
+        padding: 5px;
+        line-height: 1;
+        transition: color 0.2s;
+      }
+
+      .lightbox-close:hover {
+        color: var(--secondary);
+      }
+
+      .lightbox-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        color: #ffffff;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        user-select: none;
+      }
+
+      .lightbox-nav:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: #ffffff;
+        transform: translateY(-50%) scale(1.05);
+      }
+
+      .lightbox-prev {
+        left: -80px;
+      }
+
+      .lightbox-next {
+        right: -80px;
+      }
+
+      @media (max-width: 768px) {
+        .lightbox-prev {
+          left: 10px;
+          top: auto;
+          bottom: -70px;
+          transform: none;
+        }
+        .lightbox-next {
+          right: 10px;
+          top: auto;
+          bottom: -70px;
+          transform: none;
+        }
+        .lightbox-prev:hover {
+          transform: scale(1.05);
+        }
+        .lightbox-next:hover {
+          transform: scale(1.05);
+        }
+        .lightbox-content {
+          margin-bottom: 60px;
+        }
+      }
+
+      /* Mobile Drawer / Bottom Sheet */
+      .mobile-sheet {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--surface-strong);
+        border-top: 2px solid #000000;
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        transform: translateY(100%);
+        transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        z-index: 10000;
+        box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .mobile-sheet.active {
+        transform: translateY(0);
+      }
+
+      .sheet-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(19, 7, 22, 0.6);
+        backdrop-filter: blur(4px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.28s;
+        z-index: 9999;
+      }
+
+      .sheet-backdrop.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .sheet-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.25rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .sheet-content {
+        padding: 1rem 1.5rem 2rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+      }
+
+      .back-home-footer {
+        text-align: center;
+        margin-top: 3.5rem;
+      }
+
+      .back-home-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        background: linear-gradient(135deg, #0e5b35, #149c5e) !important;
+        color: white !important;
+        font-weight: 700;
+        border: 2px solid #000000 !important;
+        padding: 0.85rem 2rem;
+        border-radius: var(--radius-xl);
+        font-family: 'Poppins', sans-serif;
+        text-decoration: none;
+        transition: transform 0.28s ease, box-shadow 0.28s ease;
+        cursor: pointer;
+      }
+
+      .back-home-btn:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 0 10px 20px rgba(16, 139, 100, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="floating-nav glass" aria-label="Main navigation">
+      <a class="brand-lockup" href="index.html">
+        <img class="brand-mark brand-logo" src="logo2.png" alt="Jambhulsangh logo" />
+        <span class="brand-copy">
+          <strong>Jambhulsangh</strong>
+          <small>Jambhul growers network</small>
+        </span>
+      </a>
+
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="gallery.html" style="color: var(--text); font-weight: 600;">Gallery</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact</a>
+      </div>
+
+      <div class="nav-actions">
+        <button id="themeToggleBtn" class="button button-secondary compact-button" type="button" style="border: 2px solid #000000 !important;">
+          Dark mode
+        </button>
+        <button id="mobileMenuBtn" class="button button-primary compact-button mobile-only" type="button" style="padding: 0.5rem 0.85rem; font-size: 0.85rem; border: 2px solid #000000 !important;">
+          ☰
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Content Shell -->
+    <main class="gallery-wrapper">
+      <div class="gallery-header">
+        <h1>चित्र दालन / Image Gallery</h1>
+        <p>
+          Discover rich snapshots of the cooperative assemblies, modern quality packaging, organic farming methods, and sweet premium grade harvests of our member networks.
+        </p>
+      </div>
+
+      <!-- Filter Category Tabs -->
+      <div class="filter-tabs">
+        <button class="filter-tab active" data-category="all">All / सर्व</button>
+        <button class="filter-tab" data-category="farms">Farms & Fruits / शेत आणि फळे</button>
+        <button class="filter-tab" data-category="community">Community & Events / समुदाय</button>
+      </div>
+
+      <!-- Gallery Grid -->
+      <section class="gallery-grid" id="galleryGrid">
+        <!-- Javascript will populate this beautifully -->
+      </section>
+
+      <div class="back-home-footer">
+        <a href="index.html" class="back-home-btn">
+          ← Back to Network Directory / मुख्यपृष्ठ
+        </a>
+      </div>
+    </main>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox-modal" id="lightboxModal" role="dialog" aria-modal="true">
+      <button class="lightbox-close" id="lightboxClose">&times;</button>
+      <button class="lightbox-nav lightbox-prev" id="lightboxPrev">&larr;</button>
+      <button class="lightbox-nav lightbox-next" id="lightboxNext">&rarr;</button>
+      
+      <div class="lightbox-content">
+        <img src="" alt="" class="lightbox-image" id="lightboxImage" />
+        <div class="lightbox-caption">
+          <h3 id="lightboxTitle">Image Title</h3>
+          <p id="lightboxDesc">Detailed descriptive caption in English and Marathi.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Bottom Sheet -->
+    <div class="sheet-backdrop" id="sheetBackdrop"></div>
+    <div class="mobile-sheet" id="mobileSheet">
+      <div class="sheet-header">
+        <div>
+          <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-soft); font-weight: 700;">Menu</span>
+          <h3 style="margin: 0; font-family: 'Poppins', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--text);">Quick Actions</h3>
+        </div>
+        <button id="closeSheetBtn" class="button button-secondary compact-button" type="button" style="border: 2px solid #000000 !important;">
+          Close
+        </button>
+      </div>
+      <div class="sheet-content">
+        <a href="index.html" class="button button-secondary" style="justify-content: center; gap: 0.6rem; width: 100%; font-family: 'Poppins', sans-serif; border: 2px solid #000000 !important;">
+          🏠 Home / मुख्यपृष्ठ
+        </a>
+        <a href="gallery.html" class="button button-secondary" style="justify-content: center; gap: 0.6rem; width: 100%; font-family: 'Poppins', sans-serif; border: 2px solid #000000 !important; font-weight: 700; background: rgba(92, 19, 99, 0.05);">
+          🖼️ Gallery / चित्र दालन
+        </a>
+        <a href="about.html" class="button button-secondary" style="justify-content: center; gap: 0.6rem; width: 100%; font-family: 'Poppins', sans-serif; border: 2px solid #000000 !important;">
+          📖 About Us / आमच्याबद्दल
+        </a>
+        <a href="contact.html" class="button button-secondary" style="justify-content: center; gap: 0.6rem; width: 100%; font-family: 'Poppins', sans-serif; border: 2px solid #000000 !important;">
+          📞 Contact / संपर्क
+        </a>
+      </div>
+    </div>
+
+    <!-- Gallery Data & Interaction Script -->
+    <script>
+      // 14 Community photos database mapping
+      const galleryData = [
+        {
+          id: 1,
+          src: "1.jpeg",
+          category: "community",
+          titleEN: "State Exhibition & Agricultural Gathering 2026",
+          titleMR: "राज्य प्रदर्शन आणि कृषी मेळावा २०२६",
+          descEN: "Connecting farmers from multiple talukas of Maharashtra in one high-visibility cooperative expo.",
+          descMR: "महाराष्ट्रातील विविध तालुक्यांतील शेतकऱ्यांना एकाच उच्च-दृश्यता सहकारी प्रदर्शनात जोडणे."
+        },
+        {
+          id: 2,
+          src: "2.jpeg",
+          category: "farms",
+          titleEN: "Freshly Harvested Organic Konkan Bahadoli Jamuns",
+          titleMR: "ताजे काढलेले सेंद्रिय कोकण बहाडोली जांभूळ",
+          descEN: "Vibrant, deep-purple organic produce sorted carefully for dispatch.",
+          descMR: "ताजे, गडद-जांभळे सेंद्रिय उत्पादन वितरणासाठी काळजीपूर्वक वर्गीकृत केले आहे."
+        },
+        {
+          id: 3,
+          src: "3.jpeg",
+          category: "community",
+          titleEN: "Jambhulsangh Farmers Training and Assembly",
+          titleMR: "जांभूळसंघ शेतकरी प्रशिक्षण आणि सभा",
+          descEN: "A structured session empowering member growers with organic nutrition and soil management guidance.",
+          descMR: "सेंद्रिय पोषण आणि मृदा व्यवस्थापन मार्गदर्शनासह उत्पादक सदस्यांना सक्षम बनवणारे एक सुनियोजित सत्र."
+        },
+        {
+          id: 4,
+          src: "4.jpeg",
+          category: "community",
+          titleEN: "Growers Cooperative Marketing Strategy Meeting",
+          titleMR: "उत्पादक सहकारी विपणन धोरण बैठक",
+          descEN: "Active discussions about removing intermediary commissions and implementing fixed transparent prices.",
+          descMR: "मध्यस्थांचे कमिशन काढून टाकण्याबाबत आणि निश्चित पारदर्शक दर लागू करण्याबाबत सक्रिय चर्चा."
+        },
+        {
+          id: 5,
+          src: "5.jpeg",
+          category: "farms",
+          titleEN: "High-Yielding Goma Priyanka Jamun Plantations",
+          titleMR: "भरघोस उत्पादन देणारी गोमा प्रियांका जांभूळ लागवड",
+          descEN: "A view of the organized, weed-controlled organic orchards supporting dense branch growth.",
+          descMR: "घनदाट फांद्यांच्या वाढीला आधार देणाऱ्या व्यवस्थापित, तण-नियंत्रित सेंद्रिय बागांचे दृश्य."
+        },
+        {
+          id: 6,
+          src: "6.jpeg",
+          category: "community",
+          titleEN: "Interactive Session with Agri-scientists and Farmers",
+          titleMR: "कृषी शास्त्रज्ञ आणि शेतकऱ्यांचे चर्चासत्र",
+          descEN: "State scientists lecturing on modern botanical grafting and pest prevention techniques.",
+          descMR: "आधुनिक वनस्पती कलम आणि कीड प्रतिबंधक तंत्रांवर व्याख्यान देताना कृषी शास्त्रज्ञ."
+        },
+        {
+          id: 7,
+          src: "7.jpeg",
+          category: "community",
+          titleEN: "Annual General Meet of Jambhul Bagaitdar Sangh",
+          titleMR: "जांभूळ बागाईतदार संघाची वार्षिक सर्वसाधारण सभा",
+          descEN: "Election and resolution updates from the state executive committee to all union members.",
+          descMR: "राज्य कार्यकारिणीकडून सर्व युनियन सदस्यांना निवडणूक आणि ठरावांचे अद्यतने."
+        },
+        {
+          id: 8,
+          src: "8.jpeg",
+          category: "farms",
+          titleEN: "Sweet and Antioxidant-rich Dark Purple Jamuns close-up",
+          titleMR: "गोड आणि अँटिऑक्सिडंटने समृद्ध गडद जांभळे",
+          descEN: "Showcasing the high fruit density and excellent pulpy texture of ripe Maharashtra Jamuns.",
+          descMR: "पिकलेल्या महाराष्ट्रातील जांभळांची उच्च फळांची घनता आणि उत्कृष्ट रसाळ पोत दर्शवित आहे."
+        },
+        {
+          id: 9,
+          src: "9.jpeg",
+          category: "community",
+          titleEN: "Executive Committee Planning Session",
+          titleMR: "कार्यकारिणी नियोजन बैठक",
+          descEN: "Designing digital record-keeping tools and standardizing payment verifications.",
+          descMR: "डिजिटल रेकॉर्ड ठेवण्याच्या साधनांची रचना करणे आणि पेमेंट पडताळणीचे मानकीकरण करणे."
+        },
+        {
+          id: 10,
+          src: "10.jpeg",
+          category: "farms",
+          titleEN: "Standardized Packaging and Quality Inspection",
+          titleMR: "प्रमाणित पॅकेजिंग आणि गुणवत्ता तपासणी",
+          descEN: "Securing uniform box designs with aerated protection for safe transit without moisture decay.",
+          descMR: "दमटपणामुळे होणारा सड टाळण्यासाठी हवेशीर संरक्षणासह एकसमान बॉक्स डिझाइन सुरक्षित करणे."
+        },
+        {
+          id: 11,
+          src: "11.jpeg",
+          category: "community",
+          titleEN: "Farmers sharing organic cultivation best practices",
+          titleMR: "सेंद्रिय लागवडीच्या पद्धती सामायिक करताना शेतकरी",
+          descEN: "On-site field demonstrations of mulching and drip irrigation implementations.",
+          descMR: "आच्छादन (मल्चिंग) आणि ठिबक सिंचन अंमलबजावणीचे प्रत्यक्ष क्षेत्रावरील प्रात्यक्षिक."
+        },
+        {
+          id: 12,
+          src: "12.jpeg",
+          category: "farms",
+          titleEN: "Abundant Fruit Bunches ripening on Trees",
+          titleMR: "झाडावर पिकणारे मुबलक जांभळांचे घोस",
+          descEN: "Strong, organic trees producing healthy deep-toned fruit clusters under sun-drenched skies.",
+          descMR: "उन्हात न्हालेल्या आकाशाखाली निरोगी गडद रंगाच्या फळांचे घोस तयार करणारी मजबूत, सेंद्रिय झाडे."
+        },
+        {
+          id: 13,
+          src: "13.jpeg",
+          category: "farms",
+          titleEN: "Premium Grade Handpicked Jamuns ready for dispatch",
+          titleMR: "वितरणासाठी तयार प्रीमियम दर्जाची निवडक जांभळे",
+          descEN: "Inspected individually to match color saturation, sizing, and minimal skin bruising guidelines.",
+          descMR: "रंगाची संपृक्तता, आकार आणि किमान त्वचेवरील डागांच्या मार्गदर्शक तत्वांनुसार वैयक्तिकरित्या तपासणी."
+        },
+        {
+          id: 14,
+          src: "14.jpeg",
+          category: "community",
+          titleEN: "Dedicated Grower Network representatives at the farm",
+          titleMR: "शेतावरील समर्पित उत्पादक नेटवर्क प्रतिनिधी",
+          descEN: "Building a cooperative community of trust, progress, and financial sustainability.",
+          descMR: "विश्वास, प्रगती आणि आर्थिक स्थिरतेचा एक सहकारी समुदाय तयार करणे."
+        }
+      ];
+
+      let currentFilteredData = [...galleryData];
+      let currentActiveIndex = 0;
+
+      const galleryGrid = document.getElementById("galleryGrid");
+      const filterTabs = document.querySelectorAll(".filter-tab");
+
+      // Lightbox elements
+      const lightboxModal = document.getElementById("lightboxModal");
+      const lightboxImage = document.getElementById("lightboxImage");
+      const lightboxTitle = document.getElementById("lightboxTitle");
+      const lightboxDesc = document.getElementById("lightboxDesc");
+      const lightboxClose = document.getElementById("lightboxClose");
+      const lightboxPrev = document.getElementById("lightboxPrev");
+      const lightboxNext = document.getElementById("lightboxNext");
+
+      // Mobile menu elements
+      const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+      const mobileSheet = document.getElementById("mobileSheet");
+      const sheetBackdrop = document.getElementById("sheetBackdrop");
+      const closeSheetBtn = document.getElementById("closeSheetBtn");
+
+      // Theme toggle
+      const themeToggleBtn = document.getElementById("themeToggleBtn");
+
+      // Load theme from LocalStorage
+      const savedTheme = localStorage.getItem("theme") || "light";
+      document.documentElement.setAttribute("data-theme", savedTheme);
+      updateThemeButtonText(savedTheme);
+
+      themeToggleBtn.addEventListener("click", () => {
+        const currentTheme = document.documentElement.getAttribute("data-theme");
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        document.documentElement.setAttribute("data-theme", newTheme);
+        localStorage.setItem("theme", newTheme);
+        updateThemeButtonText(newTheme);
+      });
+
+      function updateThemeButtonText(theme) {
+        themeToggleBtn.textContent = theme === "dark" ? "☀️ Light Mode" : "🌙 Dark Mode";
+      }
+
+      // Render Gallery Cards
+      function renderGallery(filter = "all") {
+        galleryGrid.innerHTML = "";
+        
+        currentFilteredData = galleryData.filter(item => {
+          if (filter === "all") return true;
+          return item.category === filter;
+        });
+
+        if (currentFilteredData.length === 0) {
+          galleryGrid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-soft); font-weight: 500;">No images found in this category.</div>`;
+          return;
+        }
+
+        currentFilteredData.forEach((item, index) => {
+          const card = document.createElement("article");
+          card.className = "gallery-item";
+          card.setAttribute("tabindex", "0");
+          card.setAttribute("aria-label", item.titleEN);
+
+          const catBadge = item.category === "farms" ? "Farms & Fruits" : "Community";
+
+          card.innerHTML = `
+            <div class="image-container">
+              <img src="${item.src}" alt="${item.titleEN}" class="gallery-image" loading="lazy" />
+              <div class="item-overlay">
+                <div class="overlay-text">
+                  <h4>${item.titleMR}</h4>
+                  <p>${item.titleEN}</p>
+                </div>
+              </div>
+            </div>
+            <div class="item-details">
+              <h4>${item.titleEN}</h4>
+              <span class="badge">${catBadge}</span>
+            </div>
+          `;
+
+          card.addEventListener("click", () => openLightbox(index));
+          card.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              openLightbox(index);
+            }
+          });
+
+          galleryGrid.appendChild(card);
+        });
+      }
+
+      // Filter click handler
+      filterTabs.forEach(tab => {
+        tab.addEventListener("click", () => {
+          filterTabs.forEach(t => t.classList.remove("active"));
+          tab.classList.add("active");
+          const category = tab.getAttribute("data-category");
+          renderGallery(category);
+        });
+      });
+
+      // Lightbox Functions
+      function openLightbox(index) {
+        currentActiveIndex = index;
+        const item = currentFilteredData[index];
+        if (!item) return;
+
+        lightboxImage.src = item.src;
+        lightboxImage.alt = item.titleEN;
+        lightboxTitle.innerHTML = `${item.titleMR} <span style="display:block; font-size:1.15rem; color:#e2dbe5; margin-top:0.25rem;">${item.titleEN}</span>`;
+        lightboxDesc.innerHTML = `<span style="font-weight: 600; display: block; margin-bottom: 0.25rem;">${item.descMR}</span><span style="opacity: 0.85; font-size: 0.9rem;">${item.descEN}</span>`;
+        
+        lightboxModal.classList.add("active");
+        document.body.style.overflow = "hidden"; // Disable background scrolling
+      }
+
+      function closeLightbox() {
+        lightboxModal.classList.remove("active");
+        document.body.style.overflow = "";
+      }
+
+      function navigateLightbox(dir) {
+        let newIndex = currentActiveIndex + dir;
+        if (newIndex < 0) {
+          newIndex = currentFilteredData.length - 1;
+        } else if (newIndex >= currentFilteredData.length) {
+          newIndex = 0;
+        }
+        openLightbox(newIndex);
+      }
+
+      lightboxClose.addEventListener("click", closeLightbox);
+      lightboxPrev.addEventListener("click", () => navigateLightbox(-1));
+      lightboxNext.addEventListener("click", () => navigateLightbox(1));
+
+      // Close on backdrop click
+      lightboxModal.addEventListener("click", (e) => {
+        if (e.target === lightboxModal) {
+          closeLightbox();
+        }
+      });
+
+      // Keyboard Controls
+      document.addEventListener("keydown", (e) => {
+        if (!lightboxModal.classList.contains("active")) return;
+        
+        if (e.key === "Escape") {
+          closeLightbox();
+        } else if (e.key === "ArrowLeft") {
+          navigateLightbox(-1);
+        } else if (e.key === "ArrowRight") {
+          navigateLightbox(1);
+        }
+      });
+
+      // Mobile Drawer actions
+      mobileMenuBtn.addEventListener("click", () => {
+        mobileSheet.classList.add("active");
+        sheetBackdrop.classList.add("active");
+      });
+
+      function closeDrawer() {
+        mobileSheet.classList.remove("active");
+        sheetBackdrop.classList.remove("active");
+      }
+
+      closeSheetBtn.addEventListener("click", closeDrawer);
+      sheetBackdrop.addEventListener("click", closeDrawer);
+
+      // Initial Render
+      renderGallery();
+    </script>
+  </body>
+</html>
