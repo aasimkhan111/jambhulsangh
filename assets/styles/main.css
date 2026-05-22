@@ -2723,3 +2723,53 @@ img {
   transform: translateY(0) scale(0.98) !important;
 }
 
+/* Premium Unified Footer */
+.premium-footer {
+  margin-top: 4rem;
+  padding: 2.5rem 1.5rem;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  text-align: center;
+  transition: background var(--transition), border-color var(--transition);
+}
+
+.premium-footer .footer-copy {
+  font-size: 0.88rem;
+  color: var(--text-soft);
+  margin: 0;
+  font-weight: 500;
+}
+
+.premium-footer .developed-by-link {
+  display: inline-block;
+  background: #ffffff;
+  padding: 0.45rem 1.25rem;
+  border-radius: 12px;
+  border: 1.5px solid #eaeaea;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+}
+
+.premium-footer .developed-by-link img {
+  height: 38px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+.premium-footer .developed-by-link:hover {
+  transform: translateY(-2px) scale(1.02);
+  border-color: #d1a153; /* Elegant champagne gold highlight on hover! */
+  box-shadow: 0 8px 20px rgba(209, 161, 83, 0.15);
+}
+
+.premium-footer .developed-by-link:active {
+  transform: translateY(0) scale(0.98);
+}
+
+
