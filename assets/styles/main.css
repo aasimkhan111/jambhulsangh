@@ -2747,16 +2747,16 @@ img {
 .premium-footer .developed-by-link {
   display: inline-block;
   background: #ffffff;
-  padding: 0.45rem 1.25rem;
-  border-radius: 12px;
+  padding: 0.7rem 1.8rem;
+  border-radius: 16px;
   border: 1.5px solid #eaeaea;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   text-decoration: none;
 }
 
 .premium-footer .developed-by-link img {
-  height: 38px;
+  height: 72px;
   width: auto;
   display: block;
   object-fit: contain;
