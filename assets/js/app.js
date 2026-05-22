@@ -75,7 +75,7 @@
   });
   var photoSlides = [
     {
-      src: "committee.png?v=4",
+      src: "committee.png?v=5",
       alt: "जांभूळ बागाईतदार संघ महाराष्ट्र राज्य - राज्य कार्यकारिणी",
       caption: "State Executive Committee / राज्य कार्यकारिणी",
     }
